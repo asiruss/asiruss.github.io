@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="/res/img/favicon.png">
+    <title>404 - Page not found</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+      }
+      
+      #notfound {
+        animation: flicker 2s infinite;
+        font-size: 8rem;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      @keyframes flicker {
+        0% { opacity: 0.1; filter: brightness(0.2); }
+        10% { opacity: 0.3; filter: brightness(0.4); }
+        20% { opacity: 0.8; filter: brightness(1); }
+        30% { opacity: 0.4; filter: brightness(0.5); }
+        50% { opacity: 0.9; filter: brightness(1.2); }
+        70% { opacity: 0.3; filter: brightness(0.3); }
+        90% { opacity: 0.7; filter: brightness(0.9); }
+        100% { opacity: 0.1; filter: brightness(0.2); }
+      }
+      
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: #f1f5f9;
+      }
+      
+      h3 {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        color: #cbd5e1;
+        max-width: 600px;
+        line-height: 1.6;
+      }
+      
+      .home-link {
+        display: flex;
+        background: #1e40af;
+        color: white;
+        padding: 10px 10px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 100;
+        transition: all 0.3s ease;
+        border: 1px solid #3b82f6;
+        flex-wrap: nowrap;
+      }
+      
+      .home-link:hover {
+        background: #2563eb;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+      
+      .lang-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        gap: 8px;
+        z-index: 101;
+        background: #1e293b;
+        padding: 8px;
+        border-radius: 12px;
+        border: 1px solid #334155;
+      }
+      
+      .lang {
+        width: 36px;
+        height: 36px;
+        overflow: hidden;
+        font-size: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #334155;
+        border: 1px solid #475569;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      
+      .lang:hover {
+        background: #475569;
+        transform: scale(1.05);
+      }
+      
+      .lang.active {
+        background: #60a5fa;
+        border-color: #3b82f6;
+        color: white;
+      }
+      
+      @media (max-width: 768px) {
+        #notfound {
+          font-size: 5rem;
+        }
+        
+        h2 {
+          font-size: 1.5rem;
+        }
+        
+        h3 {
+          font-size: 1rem;
+        }
+        
+        .lang-container {
+          bottom: 15px;
+          right: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="notfound" data-i18n="404">404</h1>
+    <h2 data-i18n="title">Hi. The page was not found.</h2>
+    <h3 data-i18n="description">Perhaps you made a mistake in the address, the server is buggy, or the page was deleted.</h3>
+    <span>
+      <h4 data-i18n="dontWorry">Don't worry,</h4>
+      <a href="/index.html" class="home-link" data-i18n="homeLink">Follow this link and you'll be taken to the homepage!</a>
+    </span>
+
+    <!-- Language selector -->
+    <div class="lang-container">
+      <button class="lang" id="langRu">🇷🇺</button>
+      <button class="lang active" id="langEn">🇬🇧</button>
+    </div>
+
+    <script>
+      // Language support
+      const translations = {
+        'ru': {
+          '404': '404',
+          'title': 'Привет. Страница не найдена.',
+          'description': 'Возможно, вы ошиблись в адресе, сервер глючит, или страницу удалили.',
+          'dontWorry': 'Не волнуйтесь,',
+          'homeLink': 'Перейдите по этой ссылке и вы попадёте на главную страницу!'
+        },
+        'en': {
+          '404': '404',
+          'title': 'Hi. The page was not found.',
+          'description': 'Perhaps you made a mistake in the address, the server is buggy, or the page was deleted.',
+          'dontWorry': 'Don\'t worry,',
+          'homeLink': 'Follow this link and you\'ll be taken to the homepage!'
+        }
+      };
+
+      // Language management
+      let currentLang = 'en';
+
+      function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('errorPageLang', lang);
+        
+        // Update active button
+        document.getElementById('langRu').classList.toggle('active', lang === 'ru');
+        document.getElementById('langEn').classList.toggle('active', lang === 'en');
+        
+        // Update all translatable elements
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+          const key = element.getAttribute('data-i18n');
+          if (translations[lang][key]) {
+            element.innerHTML = translations[lang][key];
+          }
+        });
+      }
+
+      // Initialize language
+      document.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('errorPageLang') || 'en';
+        setLanguage(savedLang);
+        
+        // Language button event listeners
+        document.getElementById('langRu').addEventListener('click', () => setLanguage('ru'));
+        document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
+      });
+    </script>
+  </body>
+</html> 

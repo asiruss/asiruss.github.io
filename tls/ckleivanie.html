@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="«Photo Merger» by «Asirus»: Select multiple photos and they will merge horizontally into one!">
+<meta name="keywords" content="merging, photo, editors, collage">
+<link rel="icon" type="image/png" href="/res/img/favicon.png" />
+<title>Horizontal Photo Merger</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .plus-btn {
+        width: 60px;
+        height: 60px;
+        border: 2px dashed #ccc;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        cursor: pointer;
+        margin: 20px auto;
+    }
+    
+    .plus-btn:hover {
+        border-color: #666;
+    }
+    
+    #file-input {
+        display: none;
+    }
+    
+    .preview-container {
+        display: flex;
+        gap: 10px;
+        margin: 20px 0;
+        overflow-x: auto;
+        padding: 10px;
+        border: 1px solid #ddd;
+        min-height: 120px;
+    }
+    
+    .preview-item {
+        position: relative;
+        border: 1px solid #ccc;
+        flex-shrink: 0;
+    }
+    
+    .preview-item img {
+        height: 100px;
+        display: block;
+    }
+    
+    .preview-number {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+    }
+    
+    #download-btn {
+        padding: 10px 20px;
+        background: #007cba;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin: 20px 0;
+    }
+    
+    #download-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+    }
+    
+    .counter {
+        margin: 10px 0;
+    }
+    
+    .status {
+        margin: 10px 0;
+        font-style: italic;
+    }
+
+    .lang-container {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        display: flex;
+        gap: 5px;
+        z-index: 101;
+    }
+    
+    .lang {
+        width: 30px;
+        height: 30px;
+        overflow: hidden;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    .lang:hover {
+        background: #f0f0f0;
+    }
+    
+    .lang.active {
+        border: 2px solid #4b6cb7;
+    }
+
+    .instructions-container {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+
+    .instructions-btn {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: #4b6cb7;
+        color: white;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .instructions-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .instructions-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .instructions-content {
+        background: white;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 80%;
+        overflow: auto;
+        padding: 20px;
+        position: relative;
+    }
+
+    .instructions-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #666;
+    }
+</style>
+</head>
+<body>
+<div class="instructions-container">
+    <button class="instructions-btn" id="instructionsBtn">?</button>
+</div>
+
+<h1 data-i18n="title">Horizontal Photo Merger</h1>
+<h6 data-i18n="note">Note: Some galleries may mark long photos as corrupted.</h6>
+
+<div class="plus-btn" id="plus-btn">+</div>
+<input type="file" id="file-input" accept="image/*" multiple>
+
+<div class="counter" data-i18n="counter">Images selected: <span id="count">0</span></div>
+<div class="status" id="status"></div>
+
+<div class="preview-container" id="preview-container"></div>
+
+<button id="download-btn" disabled data-i18n="download">Download PNG</button>
+
+<div class="lang-container">
+    <button class="lang" id="langRu">🇷🇺</button>
+    <button class="lang active" id="langEn">🇬🇧</button>
+</div>
+
+<div class="instructions-overlay" id="instructionsOverlay">
+    <div class="instructions-content">
+        <button class="instructions-close" id="instructionsClose">×</button>
+        <h2 data-i18n="instructionTitle">Photo Merger Instructions</h2>
+        <ol>
+            <li data-i18n="instruction1">Click the + button to select multiple images.</li>
+            <br>
+            <li data-i18n="instruction2">Selected images will appear in the preview area with numbers.</li>
+            <br>
+            <li data-i18n="instruction3">Click the download button to merge all images into one horizontal image.</li>
+            <br>
+            <li data-i18n="instruction4">Images are merged in the order they were selected.</li>
+            <br>
+            <li data-i18n="instruction5">The resulting image will have the height of the tallest image.</li>
+        </ol>
+    </div>
+</div>
+
+<script>
+    const translations = {
+        'ru': {
+            'title': 'Горизонтальная склейка фото',
+            'note': 'Примечание: некоторые галереи длинное фото могут пометить повреждённым.',
+            'counter': 'Изображений выбрано:',
+            'download': 'Скачать PNG',
+            'instructionTitle': 'Инструкция по склейке фото',
+            'instruction1': 'Нажмите кнопку + чтобы выбрать несколько изображений.',
+            'instruction2': 'Выбранные изображения появятся в области предпросмотра с номерами.',
+            'instruction3': 'Нажмите кнопку скачать чтобы объединить все изображения в одно горизонтальное изображение.',
+            'instruction4': 'Изображения объединяются в порядке их выбора.',
+            'instruction5': 'Результирующее изображение будет иметь высоту самого высокого изображения.'
+        },
+        'en': {
+            'title': 'Horizontal Photo Merger',
+            'note': 'Note: Some galleries may mark long photos as corrupted.',
+            'counter': 'Images selected:',
+            'download': 'Download PNG',
+            'instructionTitle': 'Photo Merger Instructions',
+            'instruction1': 'Click the + button to select multiple images.',
+            'instruction2': 'Selected images will appear in the preview area with numbers.',
+            'instruction3': 'Click the download button to merge all images into one horizontal image.',
+            'instruction4': 'Images are merged in the order they were selected.',
+            'instruction5': 'The resulting image will have the height of the tallest image.'
+        }
+    };
+
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('photoMergerLang', lang);
+        
+        document.getElementById('langRu').classList.toggle('active', lang === 'ru');
+        document.getElementById('langEn').classList.toggle('active', lang === 'en');
+        
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[lang][key]) {
+                if (element.tagName === 'H1' || element.tagName === 'H6' || element.tagName === 'DIV') {
+                    if (element.id === 'count') return;
+                    const text = translations[lang][key];
+                    if (element.classList.contains('counter')) {
+                        element.innerHTML = text + ` <span id="count">0</span>`;
+                    } else {
+                        element.innerHTML = text;
+                    }
+                } else {
+                    element.innerHTML = translations[lang][key];
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('photoMergerLang') || 'en';
+        setLanguage(savedLang);
+        
+        document.getElementById('langRu').addEventListener('click', () => setLanguage('ru'));
+        document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
+
+        document.getElementById('instructionsBtn').addEventListener('click', () => {
+            document.getElementById('instructionsOverlay').classList.add('active');
+        });
+
+        document.getElementById('instructionsClose').addEventListener('click', () => {
+            document.getElementById('instructionsOverlay').classList.remove('active');
+        });
+
+        document.getElementById('instructionsOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('instructionsOverlay')) {
+                document.getElementById('instructionsOverlay').classList.remove('active');
+            }
+        });
+    });
+
+    const fileInput = document.getElementById('file-input');
+    const plusBtn = document.getElementById('plus-btn');
+    const previewContainer = document.getElementById('preview-container');
+    const downloadBtn = document.getElementById('download-btn');
+    const counter = document.getElementById('count');
+    const status = document.getElementById('status');
+    
+    const images = [];
+    let processing = false;
+    
+    plusBtn.addEventListener('click', () => {
+        if (!processing) fileInput.click();
+    });
+    
+    fileInput.addEventListener('change', handleFileSelect);
+    downloadBtn.addEventListener('click', mergeAndDownload);
+    
+    function handleFileSelect(e) {
+        if (processing) return;
+        
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+        
+        const imageFiles = files.filter(file => file.type.match('image.*'));
+        
+        if (imageFiles.length === 0) {
+            status.textContent = currentLang === 'ru' ? "Пожалуйста, выбирайте только изображения!" : "Please select only images!";
+            return;
+        }
+        
+        processing = true;
+        status.textContent = currentLang === 'ru' ? "Обработка выбранных изображений..." : "Processing selected images...";
+        
+        const startIndex = images.length;
+        
+        const promises = imageFiles.map((file, index) => {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    resolve({
+                        src: event.target.result,
+                        file: file,
+                        originalIndex: startIndex + index
+                    });
+                };
+                
+                reader.readAsDataURL(file);
+            });
+        });
+        
+        Promise.all(promises).then(results => {
+            results.forEach(result => {
+                images.push(result);
+            });
+            
+            results.forEach((result, i) => {
+                createPreview(result, startIndex + i + 1);
+            });
+            
+            counter.textContent = images.length;
+            downloadBtn.disabled = false;
+            processing = false;
+            status.textContent = currentLang === 'ru' ? 
+                `Успешно загружено ${imageFiles.length} изображений!` : 
+                `Successfully loaded ${imageFiles.length} images!`;
+            
+            previewContainer.scrollLeft = previewContainer.scrollWidth;
+        });
+        
+        fileInput.value = '';
+    }
+    
+    function createPreview(imgData, index) {
+        const container = document.createElement('div');
+        container.className = 'preview-item';
+        container.dataset.index = index - 1;
+        
+        const img = document.createElement('img');
+        img.src = imgData.src;
+        img.alt = currentLang === 'ru' ? `Изображение ${index}` : `Image ${index}`;
+        
+        const numberBadge = document.createElement('div');
+        numberBadge.className = 'preview-number';
+        numberBadge.textContent = index;
+        
+        container.appendChild(img);
+        container.appendChild(numberBadge);
+        previewContainer.appendChild(container);
+    }
+    
+    function mergeAndDownload() {
+        if (images.length === 0 || processing) return;
+        
+        processing = true;
+        status.textContent = currentLang === 'ru' ? "Начинаю склейку изображений..." : "Starting image merging...";
+        downloadBtn.textContent = currentLang === 'ru' ? 'Склейка...' : 'Merging...';
+        downloadBtn.disabled = true;
+        
+        const loadPromises = images.map(imgData => {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.src = imgData.src;
+            });
+        });
+        
+        Promise.all(loadPromises).then(loadedImages => {
+            status.textContent = currentLang === 'ru' ? "Изображения загружены, начинаю склейку..." : "Images loaded, starting merge...";
+            
+            let totalWidth = 0;
+            let maxHeight = 0;
+            
+            loadedImages.forEach(img => {
+                totalWidth += img.width;
+                if (img.height > maxHeight) maxHeight = img.height;
+            });
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = totalWidth;
+            canvas.height = maxHeight;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = 'transparent';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            let currentX = 0;
+            loadedImages.forEach(img => {
+                ctx.drawImage(img, currentX, 0, img.width, img.height);
+                currentX += img.width;
+            });
+            
+            status.textContent = currentLang === 'ru' ? "Склейка завершена, начинаю сохранение..." : "Merge completed, starting save...";
+            
+            setTimeout(() => {
+                const link = document.createElement('a');
+                link.download = `merge-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                downloadBtn.textContent = currentLang === 'ru' ? 'Скачать PNG' : 'Download PNG';
+                downloadBtn.disabled = false;
+                processing = false;
+                status.textContent = currentLang === 'ru' ? 
+                    `Склейка успешно сохранена как ${link.download}` : 
+                    `Merge successfully saved as ${link.download}`;
+            }, 500);
+        }).catch(error => {
+            console.error('Merge error:', error);
+            status.textContent = currentLang === 'ru' ? 'Ошибка при склейке изображений!' : 'Error merging images!';
+            downloadBtn.textContent = currentLang === 'ru' ? 'Скачать PNG' : 'Download PNG';
+            downloadBtn.disabled = false;
+            processing = false;
+        });
+    }
+</script>
+</body>
+</html> 

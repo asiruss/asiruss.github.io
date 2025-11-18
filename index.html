@@ -421,8 +421,8 @@
           <h4 data-i18n="imageTitle">Image</h4>
         </div>
         <div class="tool-links">
-          <a href="ckleivanie.html" class="tool-link" data-i18n="photoMerger">Photo Merger</a>
-          <a href="piximage.html" class="tool-link" data-i18n="photoMachine">Photo Machine</a>
+          <a href="tls/ckleivanie.html" class="tool-link" data-i18n="photoMerger">Photo Merger</a>
+          <a href="tls/piximage.html" class="tool-link" data-i18n="photoMachine">Photo Machine</a>
         </div>
         <button class="purpose-btn" onclick="togglePurpose(this)">
           <span data-i18n="purpose">Purpose</span> ▼
@@ -438,7 +438,7 @@
           <h4 data-i18n="hsvTitle">HSV</h4>
         </div>
         <div class="tool-links">
-          <a href="colorpicker.html" class="tool-link" data-i18n="colorPicker">Color Picker</a>
+          <a href="tls/colorpicker.html" class="tool-link" data-i18n="colorPicker">Color Picker</a>
         </div>
         <button class="purpose-btn" onclick="togglePurpose(this)">
           <span data-i18n="purpose">Purpose</span> ▼
@@ -627,7 +627,6 @@
             const purposeText = currentLang === 'ru' ? 'Зачем' : 'Purpose';
             btn.innerHTML = `<span data-i18n="purpose">${purposeText}</span> ▼`;
           });
-          // УДАЛЕНО: setLanguage больше не вызывается!
         }
       });
     });

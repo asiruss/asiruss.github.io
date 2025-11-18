@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://asiruss.github.io/</loc>
+        <priority>1.0</priority>
+    </url>
+    
+    <url>
+        <loc>https://asiruss.github.io/tls/hex-editor.html</loc>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://asiruss.github.io/tls/base64.html</loc>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://asiruss.github.io/tls/massbase64.html</loc>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://asiruss.github.io/tls/svgconverte.html</loc>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://asiruss.github.io/tls/svgpalette.html</loc>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://asiruss.github.io/tls/svgviewer.html</loc>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://asiruss.github.io/tls/ckleivanie.html</loc>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://asiruss.github.io/tls/piximage.html</loc>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://asiruss.github.io/tls/colorpicker.html</loc>
+        <priority>0.9</priority>
+    </url>
+
+</urlset>

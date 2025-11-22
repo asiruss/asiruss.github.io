@@ -1,283 +1,249 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="robots" content="noindex, nofollow">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="«HSV Color Picker» by «Asirus»: Professional color selection tool with HEX codes.">
-    <link rel="icon" type="image/png" href="/res/img/favicon.png" />
-    <title>HSV Color Picker</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            overflow: auto;
-        }
-        
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f0f4f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            padding: 30px;
-            max-width: 400px;
-            width: 100%;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        
-        .header h1 {
-            color: #2c3e50;
-            font-size: 1.8em;
-            margin-bottom: 8px;
-        }
-        
-        .header p {
-            color: #7f8c8d;
-            font-size: 1em;
-        }
-        
-        .color-display {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .color-preview {
-            width: 80px;
-            height: 80px;
-            border-radius: 12px;
-            border: 3px solid #e0e0e0;
-            background: #1168c2;
-            flex-shrink: 0;
-        }
-        
-        .hex-input {
-            flex: 1;
-            padding: 0px 0px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-family: 'Consolas', monospace;
-            font-size: 1.1em;
-            font-weight: bold;
-            text-align: center;
-            text-transform: uppercase;
-            transition: border-color 0.3s;
-            width: 50px;
-        }
-        
-        .hex-input:focus {
-            outline: none;
-            border-color: #3498db;
-        }
-        
-        .color-picker {
-            position: relative;
-            width: 100%;
-            height: 300px;
-            background: linear-gradient(to right, #fff, #f00);
-            border-radius: 12px;
-            margin-bottom: 25px;
-            overflow: hidden;
-            cursor: crosshair;
-        }
-        
-        .color-picker::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to top, #000, transparent);
-        }
-        
-        .picker-cursor {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 2px solid white;
-            border-radius: 50%;
-            box-shadow: 0 0 4px rgba(0,0,0,0.5);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            top: 0;
-            left: 100%;
-        }
-        
-        .sliders {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .slider-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .slider-label {
-            width: 80px;
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 0.9em;
-        }
-        
-        .slider-container {
-            flex: 1;
-            position: relative;
-        }
-        
-        .slider {
-            width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: #e0e0e0;
-            outline: none;
-            -webkit-appearance: none;
-        }
-        
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: white;
-            border: 2px solid #3498db;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .slider-value {
-            width: 40px;
-            text-align: center;
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 0.9em;
-        }
-        
-        .hue-slider {
-            background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
-        }
-        
-        .saturation-slider {
-            background: linear-gradient(to right, #808080, currentColor);
-        }
-        
-        .value-slider {
-            background: linear-gradient(to right, #000, currentColor);
-        }
-
-        .lang-container {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            display: flex;
-            gap: 5px;
-            z-index: 101;
-        }
-        
-        .lang {
-            width: 30px;
-            height: 30px;
-            overflow: hidden;
-            font-size: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .lang:hover {
-            background: #f0f0f0;
-        }
-        
-        .lang.active {
-            border: 2px solid #4b6cb7;
-        }
-
-        .instructions-container {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-
-        .instructions-btn {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: #4b6cb7;
-            color: white;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .instructions-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .instructions-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .instructions-content {
-            background: white;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80%;
-            overflow: auto;
-            padding: 20px;
-            position: relative;
-        }
-
-        .instructions-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="«HSV Color Picker» by «Asirus»: Professional color selection tool with HEX codes.">
+<link rel="icon" type="image/png" href="/res/img/favicon.png" />
+<title>HSV Color Picker</title>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+body{
+font-family:'Segoe UI',sans-serif;
+background:#f0f4f8;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+.container{
+background:white;
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.1);
+padding:30px;
+max-width:400px;
+width:100%;
+}
+.header{
+text-align:center;
+margin-bottom:25px;
+}
+.header h1{
+color:#2c3e50;
+font-size:1.8em;
+margin-bottom:8px;
+}
+.header p{
+color:#7f8c8d;
+font-size:1em;
+}
+.color-display{
+display:flex;
+align-items:center;
+gap:15px;
+margin-bottom:25px;
+}
+.color-preview{
+width:80px;
+height:80px;
+border-radius:12px;
+border:3px solid #e0e0e0;
+background:#1168c2;
+flex-shrink:0;
+}
+.hex-input{
+flex:1;
+padding:0 0;
+border:2px solid #e0e0e0;
+border-radius:8px;
+font-family:'Consolas',monospace;
+font-size:1.1em;
+font-weight:bold;
+text-align:center;
+text-transform:uppercase;
+transition:border-color 0.3s;
+width:50px;
+}
+.hex-input:focus{
+outline:none;
+border-color:#3498db;
+}
+.color-picker{
+position:relative;
+width:100%;
+height:300px;
+background:linear-gradient(to right,#fff,#f00);
+border-radius:12px;
+margin-bottom:25px;
+overflow:hidden;
+cursor:crosshair;
+}
+.color-picker::before{
+content:'';
+position:absolute;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:linear-gradient(to top,#000,transparent);
+}
+.picker-cursor{
+position:absolute;
+width:20px;
+height:20px;
+border:2px solid white;
+border-radius:50%;
+box-shadow:0 0 4px rgba(0,0,0,0.5);
+transform:translate(-50%,-50%);
+pointer-events:none;
+top:0;
+left:100%;
+}
+.sliders{
+display:flex;
+flex-direction:column;
+gap:20px;
+}
+.slider-group{
+display:flex;
+align-items:center;
+gap:15px;
+}
+.slider-label{
+width:80px;
+font-weight:600;
+color:#2c3e50;
+font-size:0.9em;
+}
+.slider-container{
+flex:1;
+position:relative;
+}
+.slider{
+width:100%;
+height:6px;
+border-radius:3px;
+background:#e0e0e0;
+outline:none;
+-webkit-appearance:none;
+}
+.slider::-webkit-slider-thumb{
+-webkit-appearance:none;
+width:18px;
+height:18px;
+border-radius:50%;
+background:white;
+border:2px solid #3498db;
+cursor:pointer;
+box-shadow:0 2px 4px rgba(0,0,0,0.2);
+}
+.slider-value{
+width:40px;
+text-align:center;
+font-weight:600;
+color:#2c3e50;
+font-size:0.9em;
+}
+.hue-slider{
+background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);
+}
+.saturation-slider{
+background:linear-gradient(to right,#808080,currentColor);
+}
+.value-slider{
+background:linear-gradient(to right,#000,currentColor);
+}
+.lang-container{
+position:fixed;
+bottom:10px;
+right:10px;
+display:flex;
+gap:5px;
+z-index:101;
+}
+.lang{
+width:30px;
+height:30px;
+overflow:hidden;
+font-size:24px;
+display:flex;
+justify-content:center;
+align-items:center;
+background:white;
+border:1px solid #ccc;
+border-radius:4px;
+cursor:pointer;
+}
+.lang:hover{
+background:#f0f0f0;
+}
+.lang.active{
+border:2px solid #4b6cb7;
+}
+.instructions-container{
+position:absolute;
+top:10px;
+left:10px;
+}
+.instructions-btn{
+width:35px;
+height:35px;
+border-radius:50%;
+background:#4b6cb7;
+color:white;
+border:none;
+font-size:18px;
+cursor:pointer;
+display:flex;
+justify-content:center;
+align-items:center;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
+}
+.instructions-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:1000;
+opacity:0;
+visibility:hidden;
+transition:all 0.3s ease;
+}
+.instructions-overlay.active{
+opacity:1;
+visibility:visible;
+}
+.instructions-content{
+background:white;
+border-radius:8px;
+width:90%;
+max-width:500px;
+max-height:80%;
+overflow:auto;
+padding:20px;
+position:relative;
+}
+.instructions-close{
+position:absolute;
+top:10px;
+right:10px;
+background:none;
+border:none;
+font-size:24px;
+cursor:pointer;
+color:#666;
+}
+</style>
 </head>
 <body>
     <div class="instructions-container">
@@ -350,277 +316,277 @@
     </div>
 
     <script>
-        const translations = {
-            'ru': {
-                'title': 'Цветовая палитра',
-                'subtitle': 'HSV палитра с HEX-кодами',
-                'hue': 'Тон (H)',
-                'saturation': 'Насыщенность (S)',
-                'value': 'Значение (V)',
-                'instructionTitle': 'Инструкция по работе с палитрой цветов',
-                'instruction1': 'Нажмите или перетащите на цветовом поле чтобы выбрать цвет.',
-                'instruction2': 'Используйте ползунки для точной настройки Тона, Насыщенности и Значения.',
-                'instruction3': 'HEX-код обновляется автоматически и может быть скопирован.',
-                'instruction4': 'Вы также можете ввести HEX-код вручную в поле ввода.',
-                'instruction5': 'В превью отображается текущий выбранный цвет.'
-            },
-            'en': {
-                'title': 'Color Palette',
-                'subtitle': 'HSV palette with HEX codes',
-                'hue': 'Hue (H)',
-                'saturation': 'Saturation (S)',
-                'value': 'Value (V)',
-                'instructionTitle': 'Color Picker Instructions',
-                'instruction1': 'Click or drag on the color field to select a color.',
-                'instruction2': 'Use the sliders to fine-tune Hue, Saturation, and Value.',
-                'instruction3': 'The HEX code updates automatically and can be copied.',
-                'instruction4': 'You can also enter a HEX code manually in the input field.',
-                'instruction5': 'The color preview shows the currently selected color.'
-            }
-        };
+const translations={
+'ru':{
+'title':'Цветовая палитра',
+'subtitle':'HSV палитра с HEX-кодами',
+'hue':'Тон (H)',
+'saturation':'Насыщенность (S)',
+'value':'Значение (V)',
+'instructionTitle':'Инструкция по работе с палитрой цветов',
+'instruction1':'Нажмите или перетащите на цветовом поле чтобы выбрать цвет.',
+'instruction2':'Используйте ползунки для точной настройки Тона, Насыщенности и Значения.',
+'instruction3':'HEX-код обновляется автоматически и может быть скопирован.',
+'instruction4':'Вы также можете ввести HEX-код вручную в поле ввода.',
+'instruction5':'В превью отображается текущий выбранный цвет.'
+},
+'en':{
+'title':'Color Palette',
+'subtitle':'HSV palette with HEX codes',
+'hue':'Hue (H)',
+'saturation':'Saturation (S)',
+'value':'Value (V)',
+'instructionTitle':'Color Picker Instructions',
+'instruction1':'Click or drag on the color field to select a color.',
+'instruction2':'Use the sliders to fine-tune Hue, Saturation, and Value.',
+'instruction3':'The HEX code updates automatically and can be copied.',
+'instruction4':'You can also enter a HEX code manually in the input field.',
+'instruction5':'The color preview shows the currently selected color.'
+}
+};
 
-        let currentLang = 'en';
+let currentLang='en';
 
-        function setLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('colorPickerLang', lang);
+function setLanguage(lang){
+currentLang=lang;
+localStorage.setItem('colorPickerLang',lang);
             
-            document.getElementById('langRu').classList.toggle('active', lang === 'ru');
-            document.getElementById('langEn').classList.toggle('active', lang === 'en');
+document.getElementById('langRu').classList.toggle('active',lang==='ru');
+document.getElementById('langEn').classList.toggle('active',lang==='en');
             
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    element.innerHTML = translations[lang][key];
-                }
-            });
-        }
+document.querySelectorAll('[data-i18n]').forEach(element=>{
+const key=element.getAttribute('data-i18n');
+if(translations[lang][key]){
+element.innerHTML=translations[lang][key];
+}
+});
+}
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedLang = localStorage.getItem('colorPickerLang') || 'en';
-            setLanguage(savedLang);
+document.addEventListener('DOMContentLoaded',function(){
+const savedLang=localStorage.getItem('colorPickerLang')||'en';
+setLanguage(savedLang);
             
-            document.getElementById('langRu').addEventListener('click', () => setLanguage('ru'));
-            document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
+document.getElementById('langRu').addEventListener('click',()=>setLanguage('ru'));
+document.getElementById('langEn').addEventListener('click',()=>setLanguage('en'));
 
-            document.getElementById('instructionsBtn').addEventListener('click', () => {
-                document.getElementById('instructionsOverlay').classList.add('active');
-            });
+document.getElementById('instructionsBtn').addEventListener('click',()=>{
+document.getElementById('instructionsOverlay').classList.add('active');
+});
 
-            document.getElementById('instructionsClose').addEventListener('click', () => {
-                document.getElementById('instructionsOverlay').classList.remove('active');
-            });
+document.getElementById('instructionsClose').addEventListener('click',()=>{
+document.getElementById('instructionsOverlay').classList.remove('active');
+});
 
-            document.getElementById('instructionsOverlay').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('instructionsOverlay')) {
-                    document.getElementById('instructionsOverlay').classList.remove('active');
-                }
-            });
+document.getElementById('instructionsOverlay').addEventListener('click',e=>{
+if(e.target===document.getElementById('instructionsOverlay')){
+document.getElementById('instructionsOverlay').classList.remove('active');
+}
+});
 
-            const colorPreview = document.getElementById('colorPreview');
-            const hexInput = document.getElementById('hexInput');
-            const colorPicker = document.getElementById('colorPicker');
-            const pickerCursor = document.getElementById('pickerCursor');
-            const hueSlider = document.getElementById('hueSlider');
-            const saturationSlider = document.getElementById('saturationSlider');
-            const valueSlider = document.getElementById('valueSlider');
-            const hueValue = document.getElementById('hueValue');
-            const saturationValue = document.getElementById('saturationValue');
-            const valueValue = document.getElementById('valueValue');
+const colorPreview=document.getElementById('colorPreview');
+const hexInput=document.getElementById('hexInput');
+const colorPicker=document.getElementById('colorPicker');
+const pickerCursor=document.getElementById('pickerCursor');
+const hueSlider=document.getElementById('hueSlider');
+const saturationSlider=document.getElementById('saturationSlider');
+const valueSlider=document.getElementById('valueSlider');
+const hueValue=document.getElementById('hueValue');
+const saturationValue=document.getElementById('saturationValue');
+const valueValue=document.getElementById('valueValue');
             
-            let currentHue = 210;
-            let currentSaturation = 70;
-            let currentValue = 76;
-            let isDragging = false;
+let currentHue=210;
+let currentSaturation=70;
+let currentValue=76;
+let isDragging=false;
             
-            function updateColor() {
-                const hex = hsvToHex(currentHue, currentSaturation, currentValue);
-                colorPreview.style.backgroundColor = hex;
-                hexInput.value = hex.toUpperCase();
+function updateColor(){
+const hex=hsvToHex(currentHue,currentSaturation,currentValue);
+colorPreview.style.backgroundColor=hex;
+hexInput.value=hex.toUpperCase();
                 
-                updateColorPickerBackground();
-                updateSlidersColor();
-                updatePickerCursor();
-            }
+updateColorPickerBackground();
+updateSlidersColor();
+updatePickerCursor();
+}
             
-            function updateColorPickerBackground() {
-                const hueColor = hsvToHex(currentHue, 100, 100);
-                colorPicker.style.background = `linear-gradient(to right, #fff, ${hueColor})`;
-            }
+function updateColorPickerBackground(){
+const hueColor=hsvToHex(currentHue,100,100);
+colorPicker.style.background=`linear-gradient(to right,#fff,${hueColor})`;
+}
             
-            function updateSlidersColor() {
-                const currentColor = hsvToHex(currentHue, currentSaturation, currentValue);
-                saturationSlider.style.setProperty('--current-color', currentColor);
-                valueSlider.style.setProperty('--current-color', currentColor);
-            }
+function updateSlidersColor(){
+const currentColor=hsvToHex(currentHue,currentSaturation,currentValue);
+saturationSlider.style.setProperty('--current-color',currentColor);
+valueSlider.style.setProperty('--current-color',currentColor);
+}
             
-            function updatePickerCursor() {
-                const x = currentSaturation;
-                const y = 100 - currentValue;
-                pickerCursor.style.left = x + '%';
-                pickerCursor.style.top = y + '%';
-            }
+function updatePickerCursor(){
+const x=currentSaturation;
+const y=100-currentValue;
+pickerCursor.style.left=x+'%';
+pickerCursor.style.top=y+'%';
+}
             
-            function hsvToHex(h, s, v) {
-                h = h / 360;
-                s = s / 100;
-                v = v / 100;
+function hsvToHex(h,s,v){
+h=h/360;
+s=s/100;
+v=v/100;
                 
-                let r, g, b;
-                const i = Math.floor(h * 6);
-                const f = h * 6 - i;
-                const p = v * (1 - s);
-                const q = v * (1 - f * s);
-                const t = v * (1 - (1 - f) * s);
+let r,g,b;
+const i=Math.floor(h*6);
+const f=h*6-i;
+const p=v*(1-s);
+const q=v*(1-f*s);
+const t=v*(1-(1-f)*s);
                 
-                switch (i % 6) {
-                    case 0: r = v; g = t; b = p; break;
-                    case 1: r = q; g = v; b = p; break;
-                    case 2: r = p; g = v; b = t; break;
-                    case 3: r = p; g = q; b = v; break;
-                    case 4: r = t; g = p; b = v; break;
-                    case 5: r = v; g = p; b = q; break;
-                }
+switch(i%6){
+case 0:r=v;g=t;b=p;break;
+case 1:r=q;g=v;b=p;break;
+case 2:r=p;g=v;b=t;break;
+case 3:r=p;g=q;b=v;break;
+case 4:r=t;g=p;b=v;break;
+case 5:r=v;g=p;b=q;break;
+}
                 
-                const toHex = (c) => {
-                    const hex = Math.round(c * 255).toString(16);
-                    return hex.length === 1 ? '0' + hex : hex;
-                };
+const toHex=c=>{
+const hex=Math.round(c*255).toString(16);
+return hex.length===1?'0'+hex:hex;
+};
                 
-                return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-            }
+return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
             
-            function hexToHsv(hex) {
-                hex = hex.replace('#', '');
-                const r = parseInt(hex.substr(0, 2), 16) / 255;
-                const g = parseInt(hex.substr(2, 2), 16) / 255;
-                const b = parseInt(hex.substr(4, 2), 16) / 255;
+function hexToHsv(hex){
+hex=hex.replace('#','');
+const r=parseInt(hex.substr(0,2),16)/255;
+const g=parseInt(hex.substr(2,2),16)/255;
+const b=parseInt(hex.substr(4,2),16)/255;
                 
-                const max = Math.max(r, g, b);
-                const min = Math.min(r, g, b);
-                let h, s, v = max;
+const max=Math.max(r,g,b);
+const min=Math.min(r,g,b);
+let h,s,v=max;
                 
-                const d = max - min;
-                s = max === 0 ? 0 : d / max;
+const d=max-min;
+s=max===0?0:d/max;
                 
-                if (max === min) {
-                    h = 0;
-                } else {
-                    switch (max) {
-                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-                        case g: h = (b - r) / d + 2; break;
-                        case b: h = (r - g) / d + 4; break;
-                    }
-                    h /= 6;
-                }
+if(max===min){
+h=0;
+}else{
+switch(max){
+case r:h=(g-b)/d+(g<b?6:0);break;
+case g:h=(b-r)/d+2;break;
+case b:h=(r-g)/d+4;break;
+}
+h/=6;
+}
                 
-                return {
-                    h: Math.round(h * 360),
-                    s: Math.round(s * 100),
-                    v: Math.round(v * 100)
-                };
-            }
+return {
+h:Math.round(h*360),
+s:Math.round(s*100),
+v:Math.round(v*100)
+};
+}
             
-            function handleColorPickerClick(e) {
-                const rect = colorPicker.getBoundingClientRect();
-                const x = ((e.clientX - rect.left) / rect.width) * 100;
-                const y = ((e.clientY - rect.top) / rect.height) * 100;
+function handleColorPickerClick(e){
+const rect=colorPicker.getBoundingClientRect();
+const x=((e.clientX-rect.left)/rect.width)*100;
+const y=((e.clientY-rect.top)/rect.height)*100;
                 
-                currentSaturation = Math.max(0, Math.min(100, x));
-                currentValue = Math.max(0, Math.min(100, 100 - y));
+currentSaturation=Math.max(0,Math.min(100,x));
+currentValue=Math.max(0,Math.min(100,100-y));
                 
-                saturationSlider.value = currentSaturation;
-                valueSlider.value = currentValue;
-                saturationValue.textContent = Math.round(currentSaturation);
-                valueValue.textContent = Math.round(currentValue);
+saturationSlider.value=currentSaturation;
+valueSlider.value=currentValue;
+saturationValue.textContent=Math.round(currentSaturation);
+valueValue.textContent=Math.round(currentValue);
                 
-                updateColor();
-            }
+updateColor();
+}
             
-            colorPicker.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                handleColorPickerClick(e);
-            });
+colorPicker.addEventListener('mousedown',e=>{
+isDragging=true;
+handleColorPickerClick(e);
+});
             
-            document.addEventListener('mousemove', (e) => {
-                if (isDragging) {
-                    handleColorPickerClick(e);
-                }
-            });
+document.addEventListener('mousemove',e=>{
+if(isDragging){
+handleColorPickerClick(e);
+}
+});
             
-            document.addEventListener('mouseup', () => {
-                isDragging = false;
-            });
+document.addEventListener('mouseup',()=>{
+isDragging=false;
+});
             
-            colorPicker.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                isDragging = true;
-                handleColorPickerClick(e.touches[0]);
-            });
+colorPicker.addEventListener('touchstart',e=>{
+e.preventDefault();
+isDragging=true;
+handleColorPickerClick(e.touches[0]);
+});
             
-            document.addEventListener('touchmove', (e) => {
-                if (isDragging) {
-                    e.preventDefault();
-                    handleColorPickerClick(e.touches[0]);
-                }
-            });
+document.addEventListener('touchmove',e=>{
+if(isDragging){
+e.preventDefault();
+handleColorPickerClick(e.touches[0]);
+}
+});
             
-            document.addEventListener('touchend', () => {
-                isDragging = false;
-            });
+document.addEventListener('touchend',()=>{
+isDragging=false;
+});
             
-            hueSlider.addEventListener('input', function() {
-                currentHue = parseInt(this.value);
-                hueValue.textContent = currentHue;
-                updateColor();
-            });
+hueSlider.addEventListener('input',function(){
+currentHue=parseInt(this.value);
+hueValue.textContent=currentHue;
+updateColor();
+});
             
-            saturationSlider.addEventListener('input', function() {
-                currentSaturation = parseInt(this.value);
-                saturationValue.textContent = currentSaturation;
-                updateColor();
-            });
+saturationSlider.addEventListener('input',function(){
+currentSaturation=parseInt(this.value);
+saturationValue.textContent=currentSaturation;
+updateColor();
+});
             
-            valueSlider.addEventListener('input', function() {
-                currentValue = parseInt(this.value);
-                valueValue.textContent = currentValue;
-                updateColor();
-            });
+valueSlider.addEventListener('input',function(){
+currentValue=parseInt(this.value);
+valueValue.textContent=currentValue;
+updateColor();
+});
             
-            hexInput.addEventListener('input', function() {
-                let hex = this.value.replace('#', '');
-                if (hex.length === 3) {
-                    hex = hex.split('').map(c => c + c).join('');
-                }
-                if (hex.length === 6 && /^[0-9A-Fa-f]{6}$/.test(hex)) {
-                    const hsv = hexToHsv(hex);
-                    currentHue = hsv.h;
-                    currentSaturation = hsv.s;
-                    currentValue = hsv.v;
+hexInput.addEventListener('input',function(){
+let hex=this.value.replace('#','');
+if(hex.length===3){
+hex=hex.split('').map(c=>c+c).join('');
+}
+if(hex.length===6&&/^[0-9A-Fa-f]{6}$/.test(hex)){
+const hsv=hexToHsv(hex);
+currentHue=hsv.h;
+currentSaturation=hsv.s;
+currentValue=hsv.v;
                     
-                    hueSlider.value = currentHue;
-                    saturationSlider.value = currentSaturation;
-                    valueSlider.value = currentValue;
+hueSlider.value=currentHue;
+saturationSlider.value=currentSaturation;
+valueSlider.value=currentValue;
                     
-                    hueValue.textContent = currentHue;
-                    saturationValue.textContent = currentSaturation;
-                    valueValue.textContent = currentValue;
+hueValue.textContent=currentHue;
+saturationValue.textContent=currentSaturation;
+valueValue.textContent=currentValue;
                     
-                    updateColor();
-                }
-            });
+updateColor();
+}
+});
             
-            hexInput.addEventListener('blur', function() {
-                let hex = this.value.replace('#', '').toUpperCase();
-                if (hex.length === 6 && /^[0-9A-F]{6}$/.test(hex)) {
-                    this.value = '#' + hex;
-                } else {
-                    this.value = hsvToHex(currentHue, currentSaturation, currentValue).toUpperCase();
-                }
-            });
+hexInput.addEventListener('blur',function(){
+let hex=this.value.replace('#','').toUpperCase();
+if(hex.length===6&&/^[0-9A-F]{6}$/.test(hex)){
+this.value='#'+hex;
+}else{
+this.value=hsvToHex(currentHue,currentSaturation,currentValue).toUpperCase();
+}
+});
             
-            updateColor();
-        });
+updateColor();
+});
     </script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="description" content="«Converter and BASE 64 Informant» by «Asirus» - Here you can convert your photo/video/audio to BASE 64 for free and check it for validity!">
 <link rel="icon" href="/res/img/favicon.png">
@@ -502,4 +502,97 @@ statusDiv.textContent=`❌ Неподдерживаемое расширение
 }
 }
 
-function validateAndDisplay
+function validateAndDisplay(dataURI){
+const mediaType=dataURI.split(':')[1].split(';')[0].split('/')[0];
+
+switch(mediaType){
+case'image':
+displayImage(dataURI);
+break;
+case'audio':
+displayAudio(dataURI);
+break;
+case'video':
+displayVideo(dataURI);
+break;
+default:
+statusDiv.textContent='❌ Неподдерживаемый тип медиа';
+resetBtn.style.display='block';
+}
+}
+
+function displayImage(src){
+const img=new Image();
+img.onload=()=>{
+uploaderInfo.innerHTML='';
+uploaderInfo.classList.remove('placeholder');
+uploaderInfo.appendChild(img);
+statusDiv.textContent='✔️ Изображение валидно. Используй наш «Писатель» чтобы получить base64 файл!';
+resetBtn.style.display='block';
+extensionInputContainer.style.display='none';
+};
+img.onerror=()=>{
+statusDiv.textContent='❌ Повреждённый Base64 (изображение)';
+resetBtn.style.display='block';
+extensionInputContainer.style.display='none';
+};
+img.src=src;
+}
+
+function displayAudio(src){
+const audio=document.createElement('audio');
+audio.controls=true;
+
+audio.onloadeddata=()=>{
+uploaderInfo.innerHTML='';
+uploaderInfo.classList.remove('placeholder');
+uploaderInfo.appendChild(audio);
+statusDiv.textContent='✔️ Аудио валидно. Используй наш «Писатель» чтобы получить base64 файл!';
+resetBtn.style.display='block';
+extensionInputContainer.style.display='none';
+};
+
+audio.onerror=()=>{
+statusDiv.textContent='❌ Повреждённый Base64 (аудио)';
+resetBtn.style.display='block';
+extensionInputContainer.style.display='none';
+};
+
+audio.src=src;
+}
+
+function displayVideo(src){
+const video=document.createElement('video');
+video.controls=true;
+
+video.onloadeddata=()=>{
+uploaderInfo.innerHTML='';
+uploaderInfo.classList.remove('placeholder');
+uploaderInfo.appendChild(video);
+statusDiv.textContent='✔️ Видео валидно. Используй наш «Писатель» чтобы получить base64 файл!';
+resetBtn.style.display='block';
+extensionInputContainer.style.display='none';
+};
+
+video.onerror=()=>{
+statusDiv.textContent='❌ Повреждённый Base64 (видео)';
+resetBtn.style.display='block';
+extensionInputContainer.style.display='none';
+};
+
+video.src=src;
+}
+
+function resetAll(){
+uploaderInfo.innerHTML='';
+uploaderInfo.classList.add('placeholder');
+statusDiv.textContent='';
+resetBtn.style.display='none';
+extensionInputContainer.style.display='none';
+extensionInput.value='';
+currentBase64Data='';
+fileInputInfo.value='';
+}
+</script>
+</body>
+</html>

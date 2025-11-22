@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="«HEX Editor» by «Asirus» - directly change the raw bytes and manipulate the data of any file." />
-<link rel="icon" href="/res/img/favicon.png" type="image/png" size="32x32" />
+<link rel="icon" href="/res/img/favicon.png" type="image/png" />
 <title>Hex Editor</title>
 <style>
 *{
@@ -500,81 +500,80 @@ max-width:100%;
 </style>
 </head>
 <body>
-  <header data-i18n="title">HEX Editor</header>
-  <main>
-    <div class="file-input-container">
-      <button class="file-input-button" data-i18n="loadFile">Load File</button>
-      <input type="file" id="fileInput">
-    </div>
-    <textarea id="hexArea" placeholder="HEX data..." data-i18n-placeholder="hexPlaceholder"></textarea>
-    <div class="info" id="fileInfo" data-i18n="selectFile">Select a file or enter HEX data</div>
-    <div class="buttons">
-      <button class="buts" id="checkBtn" data-i18n="check">Check</button>
-      <button class="buts" id="previewBtn" data-i18n="preview">Preview</button>
-      <button class="buts" id="downloadBtn" data-i18n="download">Download</button>
-      <button class="buts" id="clearBtn" data-i18n="clear">Clear</button>
-    </div>
-    <hr>
-    <details>
-      <summary><h3 data-i18n="instructionTitle">HEX Editor Instructions</h3></summary>
-      <ol>
-        <li data-i18n="instruction1">Click "Load file" at the top to upload a file.</li>
-        <br>
-        <li data-i18n="instruction2">You will see a field with hexadecimal data.</li>
-        <br>
-        <li data-i18n="instruction3">You can modify bytes in the field, but do not touch the first bytes - without them the file will be marked as invalid.</li>
-        <br>
-        <li data-i18n="instruction4">Click "Check" to determine the file type.</li>
-        <br>
-        <li data-i18n="instruction5">Click "Preview" to preview the file if it's a photo/audio/video.</li>
-        <br>
-        <li data-i18n="instruction8">For HTML files, you can switch between "Text" and "Page" modes in the preview window.</li>
-        <br>
-        <li data-i18n="instruction6">Click "Download" to download the modified file.</li>
-        <br>
-        <li data-i18n="instruction7">Click "Clear" to clear the field of bytes.</li>
-        <br>
-        <li data-i18n="instruction9">Use "Fullscreen Mode" button at the bottom to toggle fullscreen editing.</li>
-      </ol>
-    </details>
-    <details>
-      <summary><h3 data-i18n="purposeTitle">What is a "HEX Editor" for?</h3></summary>
-      <ul>
-        <li data-i18n="purpose1">"HEX Editor" is primarily needed for low-level file editing at the byte level.</li>
-        <br>
-        <li data-i18n="purpose2">In the "HEX Editor" you can get acquainted with bytes.</li>
-        <br>
-        <li data-i18n="purpose3">This "HEX Editor" has been simplified for better performance. If you need a powerful editor, it is recommended to visit <a href="https://www.sweetscape.com/010editor/?hl=ru-RU">010 editor</a> or <a href="https://hexed.it/">Hexed IT</a>.</li>
-      </ul>
-    </details>
-    
-    <button class="fullscreen-btn" id="fullscreenBtn" data-i18n="fullscreen">Fullscreen Mode</button>
-  </main>
-  
-  <div class="lang-container">
-    <button class="lang" id="langRu">🇷🇺</button>
-    <button class="lang active" id="langEn">🇬🇧</button>
-  </div>
-  
-  <div class="preview-overlay" id="previewOverlay">
-    <div class="preview-container">
-      <div class="preview-header">
-        <div class="preview-title" data-i18n="previewTitle">File Preview</div>
-        <button class="preview-close" id="previewClose">×</button>
-      </div>
-      <div class="preview-controls" id="previewControls" style="display: none;">
-        <button class="preview-mode-btn active" id="previewModeText" data-i18n="previewText">Text</button>
-        <button class="preview-mode-btn" id="previewModePage" data-i18n="previewPage">Page</button>
-      </div>
-      <div class="preview-content" id="previewContent">
-        <div class="preview-unsupported" data-i18n="previewUnavailable">Preview not available</div>
-      </div>
-    </div>
-  </div>
+<header data-i18n="title">HEX Editor</header>
+<main>
+<div class="file-input-container">
+<button class="file-input-button" data-i18n="loadFile">Load File</button>
+<input type="file" id="fileInput">
+</div>
+<textarea id="hexArea" placeholder="HEX data..." data-i18n-placeholder="hexPlaceholder"></textarea>
+<div class="info" id="fileInfo" data-i18n="selectFile">Select a file or enter HEX data</div>
+<div class="buttons">
+<button class="buts" id="checkBtn" data-i18n="check">Check</button>
+<button class="buts" id="previewBtn" data-i18n="preview">Preview</button>
+<button class="buts" id="downloadBtn" data-i18n="download">Download</button>
+<button class="buts" id="clearBtn" data-i18n="clear">Clear</button>
+</div>
+<hr>
+<details>
+<summary><h3 data-i18n="instructionTitle">HEX Editor Instructions</h3></summary>
+<ol>
+<li data-i18n="instruction1">Click "Load file" at the top to upload a file.</li>
+<br>
+<li data-i18n="instruction2">You will see a field with hexadecimal data.</li>
+<br>
+<li data-i18n="instruction3">You can modify bytes in the field, but do not touch the first bytes - without them the file will be marked as invalid.</li>
+<br>
+<li data-i18n="instruction4">Click "Check" to determine the file type.</li>
+<br>
+<li data-i18n="instruction5">Click "Preview" to preview the file if it's a photo/audio/video.</li>
+<br>
+<li data-i18n="instruction8">For HTML files, you can switch between "Text" and "Page" modes in the preview window.</li>
+<br>
+<li data-i18n="instruction6">Click "Download" to download the modified file.</li>
+<br>
+<li data-i18n="instruction7">Click "Clear" to clear the field of bytes.</li>
+<br>
+<li data-i18n="instruction9">Use "Fullscreen Mode" button at the bottom to toggle fullscreen editing.</li>
+</ol>
+</details>
+<details>
+<summary><h3 data-i18n="purposeTitle">What is a "HEX Editor" for?</h3></summary>
+<ul>
+<li data-i18n="purpose1">"HEX Editor" is primarily needed for low-level file editing at the byte level.</li>
+<br>
+<li data-i18n="purpose2">In the "HEX Editor" you can get acquainted with bytes.</li>
+<br>
+<li data-i18n="purpose3">This "HEX Editor" has been simplified for better performance. If you need a powerful editor, it is recommended to visit <a href="https://www.sweetscape.com/010editor/?hl=ru-RU">010 editor</a> or <a href="https://hexed.it/">Hexed IT</a>.</li>
+</ul>
+</details>
 
-  <script>
-    // Language support
-    const translations={
+<button class="fullscreen-btn" id="fullscreenBtn" data-i18n="fullscreen">Fullscreen Mode</button>
+</main>
+
+<div class="lang-container">
+<button class="lang" id="langRu">🇷🇺</button>
+<button class="lang active" id="langEn">🇬🇧</button>
+</div>
+
+<div class="preview-overlay" id="previewOverlay">
+<div class="preview-container">
+<div class="preview-header">
+<div class="preview-title" data-i18n="previewTitle">File Preview</div>
+<button class="preview-close" id="previewClose">×</button>
+</div>
+<div class="preview-controls" id="previewControls" style="display: none;">
+<button class="preview-mode-btn active" id="previewModeText" data-i18n="previewText">Text</button>
+<button class="preview-mode-btn" id="previewModePage" data-i18n="previewPage">Page</button>
+</div>
+<div class="preview-content" id="previewContent">
+<div class="preview-unsupported" data-i18n="previewUnavailable">Preview not available</div>
+</div>
+</div>
+</div>
+
+<script>
+const translations={
 'ru':{
 'title':'HEX Редактор',
 'loadFile':'Загрузить файл',
@@ -683,63 +682,58 @@ max-width:100%;
 }
 };
 
-    // Language management
-    let currentLang='en';
+let currentLang='en';
 
-    function setLanguage(lang){
+function setLanguage(lang){
 currentLang=lang;
 localStorage.setItem('hexEditorLang',lang);
-            
+
 document.getElementById('langRu').classList.toggle('active',lang==='ru');
 document.getElementById('langEn').classList.toggle('active',lang==='en');
-            
+
 document.querySelectorAll('[data-i18n]').forEach(element=>{
 const key=element.getAttribute('data-i18n');
 if(translations[lang][key]){
 element.innerHTML=translations[lang][key];
 }
 });
-            
+
 document.querySelectorAll('[data-i18n-placeholder]').forEach(element=>{
 const key=element.getAttribute('data-i18n-placeholder');
 if(translations[lang][key]){
 element.placeholder=translations[lang][key];
 }
 });
-            
+
 updateFullscreenButtonText();
 }
 
-    // Initialize language
-    document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',()=>{
 const savedLang=localStorage.getItem('hexEditorLang')||'en';
 setLanguage(savedLang);
-            
+
 document.getElementById('langRu').addEventListener('click',()=>setLanguage('ru'));
 document.getElementById('langEn').addEventListener('click',()=>setLanguage('en'));
 });
 
-    // Основные переменные
-    const fileInput=document.getElementById('fileInput');
-    const hexArea=document.getElementById('hexArea');
-    const fileInfo=document.getElementById('fileInfo');
-    const previewBtn=document.getElementById('previewBtn');
-    const previewOverlay=document.getElementById('previewOverlay');
-    const previewClose=document.getElementById('previewClose');
-    const previewContent=document.getElementById('previewContent');
-    const previewControls=document.getElementById('previewControls');
-    const previewModeText=document.getElementById('previewModeText');
-    const previewModePage=document.getElementById('previewModePage');
-    const fullscreenBtn=document.getElementById('fullscreenBtn');
+const fileInput=document.getElementById('fileInput');
+const hexArea=document.getElementById('hexArea');
+const fileInfo=document.getElementById('fileInfo');
+const previewBtn=document.getElementById('previewBtn');
+const previewOverlay=document.getElementById('previewOverlay');
+const previewClose=document.getElementById('previewClose');
+const previewContent=document.getElementById('previewContent');
+const previewControls=document.getElementById('previewControls');
+const previewModeText=document.getElementById('previewModeText');
+const previewModePage=document.getElementById('previewModePage');
+const fullscreenBtn=document.getElementById('fullscreenBtn');
 
-    // Переменные для управления предпросмотром
-    let currentPreviewData=null;
-    let currentPreviewType=null;
-    let currentPreviewMode='text';
-    let currentPreviewUrl=null;
+let currentPreviewData=null;
+let currentPreviewType=null;
+let currentPreviewMode='text';
+let currentPreviewUrl=null;
 
-    // База сигнатур с расширениями и описаниями
-    const fileSignatures={
+const fileSignatures={
 'FFD8FFE0':{type:'JPEG (JFIF)',ext:'jpg',category:'image',mime:'image/jpeg',description:'JPEG Image with JFIF metadata'},
 'FFD8FFE1':{type:'JPEG (EXIF)',ext:'jpg',category:'image',mime:'image/jpeg',description:'JPEG Image with EXIF metadata'},
 'FFD8FFDB':{type:'JPEG',ext:'jpg',category:'image',mime:'image/jpeg',description:'Standard JPEG Image'},
@@ -769,15 +763,13 @@ document.getElementById('langEn').addEventListener('click',()=>setLanguage('en')
 '7F454C46':{type:'Linux ELF',ext:'elf',category:'executable',mime:'application/x-executable',description:'Linux ELF Executable'}
 };
 
-    // Получение расширения из имени файла
-    function getFileExtension(filename){
+function getFileExtension(filename){
 if(!filename)return null;
 const parts=filename.toLowerCase().split('.');
 return parts.length>1?parts[parts.length-1]:null;
 }
 
-    // Определение типа по расширению файла
-    function getTypeByExtension(ext){
+function getTypeByExtension(ext){
 const extMap={
 'jpg':{type:'JPEG Image',ext:'jpg',category:'image',mime:'image/jpeg',description:'JPEG Image File'},
 'jpeg':{type:'JPEG Image',ext:'jpg',category:'image',mime:'image/jpeg',description:'JPEG Image File'},
@@ -809,21 +801,19 @@ const extMap={
 return extMap[ext]||null;
 }
 
-    // Определение типа файла по сигнатуре
-    function detectFileType(hexData){
+function detectFileType(hexData){
 const signatures=Object.keys(fileSignatures).sort((a,b)=>b.length-a.length);
-      
+
 for(const signature of signatures){
 if(hexData.toUpperCase().startsWith(signature)){
 return fileSignatures[signature];
 }
 }
-      
+
 return null;
 }
 
-    // Получение MIME типа по категории
-    function getMimeTypeByCategory(category){
+function getMimeTypeByCategory(category){
 const mimeMap={
 'image':'image/unknown',
 'audio':'audio/unknown',
@@ -836,39 +826,36 @@ const mimeMap={
 return mimeMap[category]||'application/octet-stream';
 }
 
-    // Проверка валидности HEX данных
-    function isValidHex(hexData){
+function isValidHex(hexData){
 const cleanHex=hexData.replace(/[^0-9A-Fa-f]/g,'');
-      
+
 if(cleanHex.length===0)return false;
 if(cleanHex.length%2!==0)return false;
-      
+
 return /^[0-9A-Fa-f]+$/.test(cleanHex);
 }
 
-    // Конвертация HEX в ArrayBuffer
-    function hexToArrayBuffer(hexString){
+function hexToArrayBuffer(hexString){
 const cleanHex=hexString.replace(/[^0-9A-Fa-f]/g,'');
-      
+
 if(cleanHex.length%2!==0){
 throw new Error('Invalid HEX string length');
 }
-      
+
 const buffer=new ArrayBuffer(cleanHex.length/2);
 const view=new Uint8Array(buffer);
-      
+
 for(let i=0;i<cleanHex.length;i+=2){
 view[i/2]=parseInt(cleanHex.substring(i,i+2),16);
 }
-      
+
 return buffer;
 }
 
-    // Конвертация ArrayBuffer в HEX
-    function arrayBufferToHex(buffer){
+function arrayBufferToHex(buffer){
 const view=new Uint8Array(buffer);
 let hex='';
-      
+
 for(let i=0;i<view.length;i++){
 const byte=view[i].toString(16).padStart(2,'0');
 hex+=byte;
@@ -878,44 +865,42 @@ hex+='\n';
 hex+=' ';
 }
 }
-      
+
 return hex.trim();
 }
 
-    // Очистка предпросмотра
-    function clearPreview(){
+function clearPreview(){
 if(currentPreviewUrl){
 URL.revokeObjectURL(currentPreviewUrl);
 currentPreviewUrl=null;
 }
-      
+
 previewContent.innerHTML='';
 }
 
-    // Показать предпросмотр
-    function showPreview(){
+function showPreview(){
 const hexData=hexArea.value.trim();
-      
+
 if(!hexData){
 fileInfo.innerHTML=`<span class="invalid">${translations[currentLang]['noData']}</span>`;
 return;
 }
-      
+
 if(!isValidHex(hexData)){
 fileInfo.innerHTML=`<span class="invalid">${translations[currentLang]['invalidHex']}</span>`;
 return;
 }
-      
+
 try{
 const arrayBuffer=hexToArrayBuffer(hexData);
 const cleanHex=hexData.replace(/[^0-9A-Fa-f]/g,'');
 const detectedType=detectFileType(cleanHex);
-        
+
 clearPreview();
-        
+
 currentPreviewData=arrayBuffer;
 currentPreviewType=detectedType?detectedType.category:'unknown';
-        
+
 if(detectedType&&detectedType.category==='web'){
 previewControls.style.display='flex';
 currentPreviewMode='text';
@@ -925,83 +910,82 @@ previewModePage.classList.remove('active');
 previewControls.style.display='none';
 currentPreviewMode='text';
 }
-        
+
 updatePreviewContent();
 previewOverlay.classList.add('active');
-        
+
 }catch(error){
 fileInfo.innerHTML=`<span class="invalid">Error: ${error.message}</span>`;
 }
 }
 
-    // Обновление содержимого предпросмотра
-    function updatePreviewContent(){
+function updatePreviewContent(){
 if(!currentPreviewData)return;
-      
+
 previewContent.innerHTML='';
-      
+
 try{
 const cleanHex=hexArea.value.trim().replace(/[^0-9A-Fa-f]/g,'');
 const detectedType=detectFileType(cleanHex);
-        
+
 if(detectedType&&detectedType.category==='web'&&currentPreviewMode==='page'){
 const textDecoder=new TextDecoder('utf-8');
 const textContent=textDecoder.decode(currentPreviewData);
-          
+
 const iframe=document.createElement('iframe');
 iframe.className='preview-html-frame';
 iframe.srcdoc=textContent;
 previewContent.appendChild(iframe);
-          
+
 }else if(detectedType&&detectedType.category==='image'){
 const mimeType=detectedType.mime||'image/*';
 const blob=new Blob([currentPreviewData],{type:mimeType});
 currentPreviewUrl=URL.createObjectURL(blob);
-          
+
 const img=document.createElement('img');
 img.className='preview-image';
 img.src=currentPreviewUrl;
 previewContent.appendChild(img);
-          
+
 }else if(detectedType&&detectedType.category==='audio'){
 const mimeType=detectedType.mime||'audio/*';
 const blob=new Blob([currentPreviewData],{type:mimeType});
 currentPreviewUrl=URL.createObjectURL(blob);
-          
+
 const audio=document.createElement('audio');
 audio.className='preview-audio';
 audio.controls=true;
 audio.src=currentPreviewUrl;
 previewContent.appendChild(audio);
-          
+
 }else if(detectedType&&detectedType.category==='video'){
 const mimeType=detectedType.mime||'video/*';
 const blob=new Blob([currentPreviewData],{type:mimeType});
 currentPreviewUrl=URL.createObjectURL(blob);
-          
+
 const video=document.createElement('video');
 video.className='preview-video';
 video.controls=true;
 video.src=currentPreviewUrl;
 previewContent.appendChild(video);
-          
+
 }else{
 const textDecoder=new TextDecoder('utf-8');
 let textContent;
-          
+
 try{
 textContent=textDecoder.decode(currentPreviewData);
 }catch(e){
 const latin1Decoder=new TextDecoder('iso-8859-1');
 textContent=latin1Decoder.decode(currentPreviewData);
 }
-          
+
 const pre=document.createElement('pre');
 pre.className='preview-text';
 pre.textContent=textContent;
 previewContent.appendChild(pre);
 }
-        
+
 }catch(error){
 const errorDiv=document.createElement('div');
 errorDiv.className='preview-unsupported';
@@ -1010,39 +994,38 @@ previewContent.appendChild(errorDiv);
 }
 }
 
-    // Проверка файла с подробными характеристиками
-    function checkFile(){
+function checkFile(){
 const hexData=hexArea.value.trim();
-      
+
 if(!hexData){
 fileInfo.innerHTML=`<span class="invalid">${translations[currentLang]['noData']}</span>`;
 return;
 }
-      
+
 if(!isValidHex(hexData)){
 fileInfo.innerHTML=`<span class="invalid">${translations[currentLang]['invalidHex']}</span>`;
 return;
 }
-      
+
 fileInfo.innerHTML=`<span class="loading">${translations[currentLang]['loading']}</span>`;
-      
+
 setTimeout(()=>{
 try{
 const cleanHex=hexData.replace(/[^0-9A-Fa-f]/g,'');
 const detectedType=detectFileType(cleanHex);
 const hexLength=cleanHex.length;
 const byteCount=hexLength/2;
-          
+
 const signature=cleanHex.substring(0,16).toUpperCase();
-          
+
 const isValid=detectedType!==null;
-          
+
 const currentDate=new Date();
 const fileDate=currentDate.toLocaleString();
-          
+
 if(detectedType){
 const mimeType=detectedType.mime||getMimeTypeByCategory(detectedType.category);
-            
+
 fileInfo.innerHTML=`
 <span class="valid">${translations[currentLang]['fileLoaded']}</span>
 <div class="extension-info">
@@ -1083,30 +1066,29 @@ fileInfo.innerHTML=`<span class="invalid">Error: ${error.message}</span>`;
 },500);
 }
 
-    // Скачивание файла
-    function downloadFile(){
+function downloadFile(){
 const hexData=hexArea.value.trim();
-      
+
 if(!hexData){
 fileInfo.innerHTML=`<span class="invalid">${translations[currentLang]['noData']}</span>`;
 return;
 }
-      
+
 if(!isValidHex(hexData)){
 fileInfo.innerHTML=`<span class="invalid">${translations[currentLang]['invalidHex']}</span>`;
 return;
 }
-      
+
 try{
 const arrayBuffer=hexToArrayBuffer(hexData);
 const cleanHex=hexData.replace(/[^0-9A-Fa-f]/g,'');
 const detectedType=detectFileType(cleanHex);
-        
+
 const extension=detectedType?detectedType.ext:'bin';
 const mimeType=detectedType?(detectedType.mime||getMimeTypeByCategory(detectedType.category)):'application/octet-stream';
 const timestamp=new Date().toISOString().replace(/[:.]/g,'-').slice(0,-5);
 const filename=`hex-file-${timestamp}.${extension}`;
-        
+
 const blob=new Blob([arrayBuffer],{type:mimeType});
 const url=URL.createObjectURL(blob);
 const a=document.createElement('a');
@@ -1116,22 +1098,20 @@ document.body.appendChild(a);
 a.click();
 document.body.removeChild(a);
 URL.revokeObjectURL(url);
-        
+
 fileInfo.innerHTML=`<span class="valid">${translations[currentLang]['downloadSuccess']} ${filename}</span>`;
-        
+
 }catch(error){
 fileInfo.innerHTML=`<span class="invalid">Error: ${error.message}</span>`;
 }
 }
 
-    // Очистка поля
-    function clearField(){
+function clearField(){
 hexArea.value='';
 fileInfo.innerHTML=`<span>${translations[currentLang]['selectFile']}</span>`;
 }
 
-    // Обновление текста кнопки полноэкранного режима
-    function updateFullscreenButtonText(){
+function updateFullscreenButtonText(){
 if(document.fullscreenElement){
 fullscreenBtn.textContent=translations[currentLang]['normalScreen']||'Normal Mode';
 }else{
@@ -1139,8 +1119,7 @@ fullscreenBtn.textContent=translations[currentLang]['fullscreen']||'Fullscreen M
 }
 }
 
-    // Переключение полноэкранного режима
-    function toggleFullscreen(){
+function toggleFullscreen(){
 if(!document.fullscreenElement){
 document.documentElement.requestFullscreen().catch(err=>{
 console.error(`Error attempting to enable fullscreen: ${err.message}`);
@@ -1152,20 +1131,19 @@ document.exitFullscreen();
 }
 }
 
-    // Обработчики событий
-    fileInput.addEventListener('change',function(e){
+fileInput.addEventListener('change',function(e){
 const file=e.target.files[0];
 if(!file)return;
-      
+
 fileInfo.innerHTML=`<span class="loading">${translations[currentLang]['loading']}</span>`;
-      
+
 const reader=new FileReader();
 reader.onload=function(e){
 try{
 const arrayBuffer=e.target.result;
 const hex=arrayBufferToHex(arrayBuffer);
 hexArea.value=hex;
-          
+
 const fileExt=getFileExtension(file.name);
 const extType=getTypeByExtension(fileExt);
 const hexData=hex.replace(/[^0-9A-Fa-f]/g,'');
@@ -1173,14 +1151,14 @@ const detectedType=detectFileType(hexData)||extType;
 const hexLength=hexData.length;
 const byteCount=hexLength/2;
 const signature=hexData.substring(0,16).toUpperCase();
-          
+
 const isValid=detectedType!==null;
-          
+
 const fileDate=new Date(file.lastModified).toLocaleString();
-          
+
 if(detectedType){
 const mimeType=detectedType.mime||getMimeTypeByCategory(detectedType.category);
-            
+
 fileInfo.innerHTML=`
 <span class="valid">${translations[currentLang]['fileLoaded']}</span>
 <div class="extension-info">
@@ -1221,36 +1199,32 @@ fileInfo.innerHTML=`
 fileInfo.innerHTML=`<span class="invalid">Error loading file: ${error.message}</span>`;
 }
 };
-      
+
 reader.onerror=function(){
 fileInfo.innerHTML=`<span class="invalid">${translations[currentLang]['loadError']}</span>`;
 };
-      
+
 reader.readAsArrayBuffer(file);
 });
 
-    // Обработчики кнопок
-    document.getElementById('checkBtn').addEventListener('click',checkFile);
-    document.getElementById('previewBtn').addEventListener('click',showPreview);
-    document.getElementById('downloadBtn').addEventListener('click',downloadFile);
-    document.getElementById('clearBtn').addEventListener('click',clearField);
-    
-    // Закрытие предпросмотра
-    previewClose.addEventListener('click',()=>{
+document.getElementById('checkBtn').addEventListener('click',checkFile);
+document.getElementById('previewBtn').addEventListener('click',showPreview);
+document.getElementById('downloadBtn').addEventListener('click',downloadFile);
+document.getElementById('clearBtn').addEventListener('click',clearField);
+
+previewClose.addEventListener('click',()=>{
 previewOverlay.classList.remove('active');
 clearPreview();
 });
-    
-    // Закрытие предпросмотра по клику вне окна
-    previewOverlay.addEventListener('click',e=>{
+
+previewOverlay.addEventListener('click',e=>{
 if(e.target===previewOverlay){
 previewOverlay.classList.remove('active');
 clearPreview();
 }
 });
-    
-    // Переключение режимов предпросмотра
-    previewModeText.addEventListener('click',()=>{
+
+previewModeText.addEventListener('click',()=>{
 if(currentPreviewMode!=='text'){
 currentPreviewMode='text';
 previewModeText.classList.add('active');
@@ -1258,8 +1232,8 @@ previewModePage.classList.remove('active');
 updatePreviewContent();
 }
 });
-    
-    previewModePage.addEventListener('click',()=>{
+
+previewModePage.addEventListener('click',()=>{
 if(currentPreviewMode!=='page'){
 currentPreviewMode='page';
 previewModePage.classList.add('active');
@@ -1267,12 +1241,10 @@ previewModeText.classList.remove('active');
 updatePreviewContent();
 }
 });
-    
-    // Обработчик полноэкранного режима
-    fullscreenBtn.addEventListener('click',toggleFullscreen);
-    
-    // Слушатель изменения полноэкранного режима
-    document.addEventListener('fullscreenchange',()=>{
+
+fullscreenBtn.addEventListener('click',toggleFullscreen);
+
+document.addEventListener('fullscreenchange',()=>{
 if(document.fullscreenElement){
 document.body.classList.add('fullscreen');
 }else{
@@ -1281,12 +1253,11 @@ document.body.classList.remove('fullscreen');
 updateFullscreenButtonText();
 });
 
-    // Обработчик нажатия на кнопку загрузки (только в границах)
-    document.querySelector('.file-input-container').addEventListener('click',function(e){
+document.querySelector('.file-input-container').addEventListener('click',function(e){
 if(e.target===this){
 fileInput.click();
 }
 });
-  </script>
+</script>
 </body>
 </html>

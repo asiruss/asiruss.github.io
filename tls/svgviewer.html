@@ -1,437 +1,366 @@
-<!DOCTYPE html>
-<html lang="ru">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="«SVG Viewer» от «Asirus»: Пишите svg код, и сверху будет отображаться результат в реальном времени.">
-<link rel="icon" href="/res/img/favicon.png">
-    <title>SVG Viewer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background: #f0f2f5;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            font-family: system-ui, sans-serif;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 400px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .preview-container {
-            width: 100%;
-            aspect-ratio: 1/1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-            padding: 20px;
-        }
-        
-        .preview {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .preview svg {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        .editor-container {
-            padding: 16px;
-        }
-        
-        textarea {
-            width: 100%;
-            height: 120px;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            resize: none;
-            font-family: monospace;
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-        
-        textarea:focus {
-            outline: none;
-            border-color: #4b6cb7;
-        }
-        
-        .buttons {
-            display: flex;
-            gap: 8px;
-        }
-        
-        button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        
-        .download {
-            background: #4b6cb7;
-            color: white;
-        }
-        
-        .example {
-            background: #e9ecef;
-            color: #333;
-        }
-        
-        .clear {
-            background: #f8f9fa;
-            color: #666;
-            border: 1px solid #ddd;
-        }
-        
-        .error {
-            color: #e74c3c;
-            font-size: 14px;
-            margin-top: 8px;
-            display: none;
-        }
-
-        /* Стили для инструкций и языка из hex-editor */
-        .lang-container {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            display: flex;
-            gap: 5px;
-            z-index: 101;
-        }
-        
-        .lang {
-            width: 30px;
-            height: 30px;
-            overflow: hidden;
-            font-size: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .lang:hover {
-            background: #f0f0f0;
-        }
-        
-        .lang.active {
-            border: 2px solid #4b6cb7;
-        }
-
-        .instructions-container {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-
-        .instructions-btn {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: #4b6cb7;
-            color: white;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .instructions-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .instructions-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .instructions-content {
-            background: white;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80%;
-            overflow: auto;
-            padding: 20px;
-            position: relative;
-        }
-
-        .instructions-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="«SVG Viewer» by «Asirus»: Write svg code and the result will be displayed at the top in real time.">
+<link rel="icon" type="image/png" href="/res/img/favicon.png">
+<title>SVG Viewer</title>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+body{
+background:#f0f2f5;
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:16px;
+font-family:system-ui,sans-serif;
+}
+.container{
+width:100%;
+max-width:400px;
+background:white;
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+overflow:hidden;
+}
+.preview-container{
+width:100%;
+aspect-ratio:1/1;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#f8f9fa;
+border-bottom:1px solid #e9ecef;
+padding:20px;
+}
+.preview{
+width:100%;
+height:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+.preview svg{
+max-width:100%;
+max-height:100%;
+object-fit:contain;
+}
+.editor-container{
+padding:16px;
+}
+textarea{
+width:100%;
+height:120px;
+padding:12px;
+border:1px solid #ddd;
+border-radius:8px;
+resize:none;
+font-family:monospace;
+font-size:14px;
+margin-bottom:12px;
+}
+textarea:focus{
+outline:none;
+border-color:#4b6cb7;
+}
+.buttons{
+display:flex;
+gap:8px;
+}
+button{
+flex:1;
+padding:12px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:14px;
+}
+.download{
+background:#4b6cb7;
+color:white;
+}
+.example{
+background:#e9ecef;
+color:#333;
+}
+.clear{
+background:#f8f9fa;
+color:#666;
+border:1px solid #ddd;
+}
+.error{
+color:#e74c3c;
+font-size:14px;
+margin-top:8px;
+display:none;
+}
+.lang-container{
+position:fixed;
+bottom:10px;
+right:10px;
+display:flex;
+gap:5px;
+z-index:101;
+}
+.lang{
+width:30px;
+height:30px;
+overflow:hidden;
+font-size:24px;
+display:flex;
+justify-content:center;
+align-items:center;
+background:white;
+border:1px solid #ccc;
+border-radius:4px;
+cursor:pointer;
+}
+.lang:hover{
+background:#f0f0f0;
+}
+.lang.active{
+border:2px solid #4b6cb7;
+}
+.instructions-container{
+position:absolute;
+top:10px;
+left:10px;
+}
+.instructions-btn{
+width:35px;
+height:35px;
+border-radius:50%;
+background:#4b6cb7;
+color:white;
+border:none;
+font-size:18px;
+cursor:pointer;
+display:flex;
+justify-content:center;
+align-items:center;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
+}
+.instructions-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:1000;
+opacity:0;
+visibility:hidden;
+transition:all 0.3s ease;
+}
+.instructions-overlay.active{
+opacity:1;
+visibility:visible;
+}
+.instructions-content{
+background:white;
+border-radius:8px;
+width:90%;
+max-width:500px;
+max-height:80%;
+overflow:auto;
+padding:20px;
+position:relative;
+}
+.instructions-close{
+position:absolute;
+top:10px;
+right:10px;
+background:none;
+border:none;
+font-size:24px;
+cursor:pointer;
+color:#666;
+}
+</style>
 </head>
 <body>
-    <div class="instructions-container">
-        <button class="instructions-btn" id="instructionsBtn">?</button>
-    </div>
-
-    <div class="container">
-        <div class="preview-container">
-            <div class="preview" id="preview">
-                <span style="color:#999;" data-i18n="svgPreview">SVG появится здесь</span>
-            </div>
-        </div>
-        
-        <div class="editor-container">
-            <textarea id="svg-input" placeholder="Введите SVG код..." data-i18n-placeholder="enterSvgCode"></textarea>
-            <div class="buttons">
-                <button class="download" id="download-btn" data-i18n="download">Скачать</button>
-                <button class="example" id="example-btn" data-i18n="example">Пример</button>
-                <button class="clear" id="clear-btn" data-i18n="clear">Очистить</button>
-            </div>
-            <div class="error" id="error" data-i18n="invalidSvg">Неверный SVG код</div>
-        </div>
-    </div>
-
-    <!-- Language selector -->
-    <div class="lang-container">
-        <button class="lang" id="langRu">🇷🇺</button>
-        <button class="lang active" id="langEn">🇬🇧</button>
-    </div>
-
-    <!-- Instructions Overlay -->
-    <div class="instructions-overlay" id="instructionsOverlay">
-        <div class="instructions-content">
-            <button class="instructions-close" id="instructionsClose">×</button>
-            <h2 data-i18n="instructionTitle">Инструкция по работе с SVG Viewer</h2>
-            <ol>
-                <li data-i18n="instruction1">Введите SVG код в текстовое поле.</li>
-                <br>
-                <li data-i18n="instruction2">Результат будет отображаться в реальном времени в области предпросмотра сверху.</li>
-                <br>
-                <li data-i18n="instruction3">Нажмите «Пример» чтобы вставить пример SVG кода.</li>
-                <br>
-                <li data-i18n="instruction4">Нажмите «Скачать» чтобы скачать SVG файл.</li>
-                <br>
-                <li data-i18n="instruction5">Нажмите «Очистить» чтобы очистить поле ввода.</li>
-            </ol>
-        </div>
-    </div>
-
-    <script>
-        // Language support
-        const translations = {
-            'ru': {
-                'svgPreview': 'SVG появится здесь',
-                'enterSvgCode': 'Введите SVG код...',
-                'download': 'Скачать',
-                'example': 'Пример',
-                'clear': 'Очистить',
-                'invalidSvg': 'Неверный SVG код',
-                'instructionTitle': 'Инструкция по работе с SVG Viewer',
-                'instruction1': 'Введите SVG код в текстовое поле.',
-                'instruction2': 'Результат будет отображаться в реальном времени в области предпросмотра сверху.',
-                'instruction3': 'Нажмите «Пример» чтобы вставить пример SVG кода.',
-                'instruction4': 'Нажмите «Скачать» чтобы скачать SVG файл.',
-                'instruction5': 'Нажмите «Очистить» чтобы очистить поле ввода.'
-            },
-            'en': {
-                'svgPreview': 'SVG will appear here',
-                'enterSvgCode': 'Enter SVG code...',
-                'download': 'Download',
-                'example': 'Example',
-                'clear': 'Clear',
-                'invalidSvg': 'Invalid SVG code',
-                'instructionTitle': 'SVG Viewer Instructions',
-                'instruction1': 'Enter SVG code in the text field.',
-                'instruction2': 'The result will be displayed in real time in the preview area above.',
-                'instruction3': 'Click "Example" to insert sample SVG code.',
-                'instruction4': 'Click "Download" to download the SVG file.',
-                'instruction5': 'Click "Clear" to clear the input field.'
-            }
-        };
-
-        // Language management
-        let currentLang = 'ru';
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('svgViewerLang', lang);
-            
-            // Update active button
-            document.getElementById('langRu').classList.toggle('active', lang === 'ru');
-            document.getElementById('langEn').classList.toggle('active', lang === 'en');
-            
-            // Update all translatable elements
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    element.innerHTML = translations[lang][key];
-                }
-            });
-            
-            // Update placeholders
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-                const key = element.getAttribute('data-i18n-placeholder');
-                if (translations[lang][key]) {
-                    element.placeholder = translations[lang][key];
-                }
-            });
-        }
-
-        // Initialize language
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('svgViewerLang') || 'ru';
-            setLanguage(savedLang);
-            
-            // Language button event listeners
-            document.getElementById('langRu').addEventListener('click', () => setLanguage('ru'));
-            document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
-
-            // Instructions button
-            document.getElementById('instructionsBtn').addEventListener('click', () => {
-                document.getElementById('instructionsOverlay').classList.add('active');
-            });
-
-            // Close instructions
-            document.getElementById('instructionsClose').addEventListener('click', () => {
-                document.getElementById('instructionsOverlay').classList.remove('active');
-            });
-
-            // Close instructions when clicking outside
-            document.getElementById('instructionsOverlay').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('instructionsOverlay')) {
-                    document.getElementById('instructionsOverlay').classList.remove('active');
-                }
-            });
-        });
-
-        const svgInput = document.getElementById('svg-input');
-        const preview = document.getElementById('preview');
-        const downloadBtn = document.getElementById('download-btn');
-        const exampleBtn = document.getElementById('example-btn');
-        const clearBtn = document.getElementById('clear-btn');
-        const error = document.getElementById('error');
-
-        function updatePreview() {
-            const svgCode = svgInput.value.trim();
-            
-            if (!svgCode) {
-                preview.innerHTML = '<span style="color:#999;" data-i18n="svgPreview">SVG появится здесь</span>';
-                setLanguage(currentLang); // Re-apply language
-                error.style.display = 'none';
-                return;
-            }
-            
-            try {
-                const parser = new DOMParser();
-                const svgDoc = parser.parseFromString(svgCode, 'image/svg+xml');
-                
-                if (svgDoc.querySelector('parsererror')) {
-                    throw new Error('Invalid SVG');
-                }
-                
-                preview.innerHTML = svgCode;
-                error.style.display = 'none';
-            } catch (e) {
-                error.style.display = 'block';
-                preview.innerHTML = '<span style="color:#999;" data-i18n="svgPreview">SVG появится здесь</span>';
-                setLanguage(currentLang); // Re-apply language
-            }
-        }
-
-        function downloadSVG() {
-            const svgCode = svgInput.value.trim();
-            
-            if (!svgCode) return;
-            
-            try {
-                const parser = new DOMParser();
-                const svgDoc = parser.parseFromString(svgCode, 'image/svg+xml');
-                
-                if (svgDoc.querySelector('parsererror')) {
-                    throw new Error('Invalid SVG');
-                }
-                
-                const blob = new Blob([svgCode], { type: 'image/svg+xml' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'image.svg';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            } catch (e) {
-                error.style.display = 'block';
-            }
-        }
-
-        function insertExample() {
-            const exampleSVG = `<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="100" cy="100" r="80" fill="#4b6cb7"/>
-  <text x="100" y="110" font-family="Arial" font-size="20" text-anchor="middle" fill="white">SVG</text>
-</svg>`;
-            svgInput.value = exampleSVG;
-            updatePreview();
-        }
-
-        function clearInput() {
-            svgInput.value = '';
-            updatePreview();
-            svgInput.focus();
-        }
-
-        svgInput.addEventListener('input', updatePreview);
-        downloadBtn.addEventListener('click', downloadSVG);
-        exampleBtn.addEventListener('click', insertExample);
-        clearBtn.addEventListener('click', clearInput);
-        
-        // Автофокус на поле ввода
-        svgInput.focus();
-    </script>
+<div class="instructions-container">
+<button class="instructions-btn" id="instructionsBtn">?</button>
+</div>
+<div class="container">
+<div class="preview-container">
+<div class="preview" id="preview">
+<span style="color:#999;" data-i18n="svgPreview">SVG появится здесь</span>
+</div>
+</div>
+<div class="editor-container">
+<textarea id="svg-input" placeholder="Введите SVG код..." data-i18n-placeholder="enterSvgCode"></textarea>
+<div class="buttons">
+<button class="download" id="download-btn" data-i18n="download">Скачать</button>
+<button class="example" id="example-btn" data-i18n="example">Пример</button>
+<button class="clear" id="clear-btn" data-i18n="clear">Очистить</button>
+</div>
+<div class="error" id="error" data-i18n="invalidSvg">Неверный SVG код</div>
+</div>
+</div>
+<div class="lang-container">
+<button class="lang" id="langRu">🇷🇺</button>
+<button class="lang active" id="langEn">🇬🇧</button>
+</div>
+<div class="instructions-overlay" id="instructionsOverlay">
+<div class="instructions-content">
+<button class="instructions-close" id="instructionsClose">×</button>
+<h2 data-i18n="instructionTitle">Инструкция по работе с SVG Viewer</h2>
+<ol>
+<li data-i18n="instruction1">Введите SVG код в текстовое поле.</li>
+<br>
+<li data-i18n="instruction2">Результат будет отображаться в реальном времени в области предпросмотра сверху.</li>
+<br>
+<li data-i18n="instruction3">Нажмите «Пример» чтобы вставить пример SVG кода.</li>
+<br>
+<li data-i18n="instruction4">Нажмите «Скачать» чтобы скачать SVG файл.</li>
+<br>
+<li data-i18n="instruction5">Нажмите «Очистить» чтобы очистить поле ввода.</li>
+</ol>
+</div>
+</div>
+<script>
+const translations={
+'ru':{
+'svgPreview':'SVG появится здесь',
+'enterSvgCode':'Введите SVG код...',
+'download':'Скачать',
+'example':'Пример',
+'clear':'Очистить',
+'invalidSvg':'Неверный SVG код',
+'instructionTitle':'Инструкция по работе с SVG Viewer',
+'instruction1':'Введите SVG код в текстовое поле.',
+'instruction2':'Результат будет отображаться в реальном времени в области предпросмотра сверху.',
+'instruction3':'Нажмите «Пример» чтобы вставить пример SVG кода.',
+'instruction4':'Нажмите «Скачать» чтобы скачать SVG файл.',
+'instruction5':'Нажмите «Очистить» чтобы очистить поле ввода.'
+},
+'en':{
+'svgPreview':'SVG will appear here',
+'enterSvgCode':'Enter SVG code...',
+'download':'Download',
+'example':'Example',
+'clear':'Clear',
+'invalidSvg':'Invalid SVG code',
+'instructionTitle':'SVG Viewer Instructions',
+'instruction1':'Enter SVG code in the text field.',
+'instruction2':'The result will be displayed in real time in the preview area above.',
+'instruction3':'Click "Example" to insert sample SVG code.',
+'instruction4':'Click "Download" to download the SVG file.',
+'instruction5':'Click "Clear" to clear the input field.'
+}
+};
+let currentLang='en';
+function setLanguage(lang){
+currentLang=lang;
+localStorage.setItem('svgViewerLang',lang);
+document.getElementById('langRu').classList.toggle('active',lang==='ru');
+document.getElementById('langEn').classList.toggle('active',lang==='en');
+document.querySelectorAll('[data-i18n]').forEach(element=>{
+const key=element.getAttribute('data-i18n');
+if(translations[lang][key]){
+element.innerHTML=translations[lang][key];
+}
+});
+document.querySelectorAll('[data-i18n-placeholder]').forEach(element=>{
+const key=element.getAttribute('data-i18n-placeholder');
+if(translations[lang][key]){
+element.placeholder=translations[lang][key];
+}
+});
+}
+document.addEventListener('DOMContentLoaded',()=>{
+const savedLang=localStorage.getItem('svgViewerLang')||'ru';
+setLanguage(savedLang);
+document.getElementById('langRu').addEventListener('click',()=>setLanguage('ru'));
+document.getElementById('langEn').addEventListener('click',()=>setLanguage('en'));
+document.getElementById('instructionsBtn').addEventListener('click',()=>{
+document.getElementById('instructionsOverlay').classList.add('active');
+});
+document.getElementById('instructionsClose').addEventListener('click',()=>{
+document.getElementById('instructionsOverlay').classList.remove('active');
+});
+document.getElementById('instructionsOverlay').addEventListener('click',(e)=>{
+if(e.target===document.getElementById('instructionsOverlay')){
+document.getElementById('instructionsOverlay').classList.remove('active');
+}
+});
+});
+const svgInput=document.getElementById('svg-input');
+const preview=document.getElementById('preview');
+const downloadBtn=document.getElementById('download-btn');
+const exampleBtn=document.getElementById('example-btn');
+const clearBtn=document.getElementById('clear-btn');
+const error=document.getElementById('error');
+function updatePreview(){
+const svgCode=svgInput.value.trim();
+if(!svgCode){
+preview.innerHTML='<span style="color:#999;" data-i18n="svgPreview">SVG появится здесь</span>';
+setLanguage(currentLang);
+error.style.display='none';
+return;
+}
+try{
+const parser=new DOMParser();
+const svgDoc=parser.parseFromString(svgCode,'image/svg+xml');
+if(svgDoc.querySelector('parsererror')){
+throw new Error('Invalid SVG');
+}
+preview.innerHTML=svgCode;
+error.style.display='none';
+}catch(e){
+error.style.display='block';
+preview.innerHTML='<span style="color:#999;" data-i18n="svgPreview">SVG появится здесь</span>';
+setLanguage(currentLang);
+}
+}
+function downloadSVG(){
+const svgCode=svgInput.value.trim();
+if(!svgCode)return;
+try{
+const parser=new DOMParser();
+const svgDoc=parser.parseFromString(svgCode,'image/svg+xml');
+if(svgDoc.querySelector('parsererror')){
+throw new Error('Invalid SVG');
+}
+const blob=new Blob([svgCode],{type:'image/svg+xml'});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');
+a.href=url;
+a.download='image.svg';
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
+}catch(e){
+error.style.display='block';
+}
+}
+function insertExample(){
+const exampleSVG=`<svg width="200" height="200" viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="80" fill="#4b6cb7"/><text x="100" y="110" font-family="Arial" font-size="20" text-anchor="middle" fill="white">SVG</text></svg>`;
+svgInput.value=exampleSVG;
+updatePreview();
+}
+function clearInput(){
+svgInput.value='';
+updatePreview();
+svgInput.focus();
+}
+svgInput.addEventListener('input',updatePreview);
+downloadBtn.addEventListener('click',downloadSVG);
+exampleBtn.addEventListener('click',insertExample);
+clearBtn.addEventListener('click',clearInput);
+svgInput.focus();
+</script>
 </body>
 </html>

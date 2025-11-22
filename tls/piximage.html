@@ -1,514 +1,444 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="«Resolution Changer» by «Asirus»: Upload your photo and customize its resolution.">
 <meta name="keywords" content="pixelation, photo machine, resolution change, photo, editor">
 <link rel="icon" type="image/png" href="/res/img/favicon.png" />
 <title>Photo Machine</title>
 <style>
-    body {
-        margin: 0;
-        font-family: sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-        gap: 20px;
-        background: #f0f0f0;
-    }
-
-    #sizeDisplay {
-        font-size: 24px;
-    }
-
-    .size-input {
-        font-size: 24px;
-        border: none;
-        background: none;
-        text-align: right;
-        width: 70px;
-        padding: 0;
-        margin: 0;
-        font-family: inherit;
-        outline: none;
-        border-bottom: 2px dashed transparent;
-        transition: border-bottom-color 0.2s;
-    }
-
-    .size-input:focus {
-        border-bottom-color: #666;
-    }
-    
-    #previewWrapper {
-        border: 2px dashed #aaa;
-        background: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        position: relative;
-        max-width: 256px;
-        max-height: 256px;
-        overflow: hidden;
-    }
-
-    #previewCanvas {
-        image-rendering: pixelated;
-        display: block;
-    }
-
-    #plusText {
-        position: absolute;
-        font-size: 50px;
-        color: #999;
-        pointer-events: none;
-    }
-
-    input[type="range"] {
-        width: 300px;
-    }
-
-    #downloadBtn {
-        padding: 10px 20px;
-        font-size: 18px;
-        background-color: #2196f3;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-    }
-
-    #presets {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-    }
-
-    .preset {
-        padding: 6px 10px;
-        background: #e0e0e0;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
-    }
-
-    canvas#realCanvas {
-        display: none;
-    }
-
-    .lang-container {
-        position: fixed;
-        bottom: 10px;
-        right: 10px;
-        display: flex;
-        gap: 5px;
-        z-index: 101;
-    }
-    
-    .lang {
-        width: 30px;
-        height: 30px;
-        overflow: hidden;
-        font-size: 24px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-    
-    .lang:hover {
-        background: #f0f0f0;
-    }
-    
-    .lang.active {
-        border: 2px solid #4b6cb7;
-    }
-
-    .instructions-container {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-    }
-
-    .instructions-btn {
-        width: 35px;
-        height: 35px;
-        border-radius: 50%;
-        background: #4b6cb7;
-        color: white;
-        border: none;
-        font-size: 18px;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-
-    .instructions-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-    }
-
-    .instructions-overlay.active {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .instructions-content {
-        background: white;
-        border-radius: 8px;
-        width: 90%;
-        max-width: 500px;
-        max-height: 80%;
-        overflow: auto;
-        padding: 20px;
-        position: relative;
-    }
-
-    .instructions-close {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: none;
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-        color: #666;
-    }
+body{
+margin:0;
+font-family:sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:20px;
+gap:20px;
+background:#f0f0f0;
+}
+#sizeDisplay{
+font-size:24px;
+}
+.size-input{
+font-size:24px;
+border:none;
+background:none;
+text-align:right;
+width:70px;
+padding:0;
+margin:0;
+font-family:inherit;
+outline:none;
+border-bottom:2px dashed transparent;
+transition:border-bottom-color 0.2s;
+}
+.size-input:focus{
+border-bottom-color:#666;
+}
+#previewWrapper{
+border:2px dashed #aaa;
+background:white;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+position:relative;
+max-width:256px;
+max-height:256px;
+overflow:hidden;
+}
+#previewCanvas{
+image-rendering:pixelated;
+display:block;
+}
+#plusText{
+position:absolute;
+font-size:50px;
+color:#999;
+pointer-events:none;
+}
+input[type="range"]{
+width:300px;
+}
+#downloadBtn{
+padding:10px 20px;
+font-size:18px;
+background-color:#2196f3;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+#presets{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+justify-content:center;
+}
+.preset{
+padding:6px 10px;
+background:#e0e0e0;
+border:1px solid #ccc;
+border-radius:6px;
+cursor:pointer;
+font-size:14px;
+}
+canvas#realCanvas{
+display:none;
+}
+.lang-container{
+position:fixed;
+bottom:10px;
+right:10px;
+display:flex;
+gap:5px;
+z-index:101;
+}
+.lang{
+width:30px;
+height:30px;
+overflow:hidden;
+font-size:24px;
+display:flex;
+justify-content:center;
+align-items:center;
+background:white;
+border:1px solid #ccc;
+border-radius:4px;
+cursor:pointer;
+}
+.lang:hover{
+background:#f0f0f0;
+}
+.lang.active{
+border:2px solid #4b6cb7;
+}
+.instructions-container{
+position:absolute;
+top:10px;
+left:10px;
+}
+.instructions-btn{
+width:35px;
+height:35px;
+border-radius:50%;
+background:#4b6cb7;
+color:white;
+border:none;
+font-size:18px;
+cursor:pointer;
+display:flex;
+justify-content:center;
+align-items:center;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
+}
+.instructions-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:1000;
+opacity:0;
+visibility:hidden;
+transition:all 0.3s ease;
+}
+.instructions-overlay.active{
+opacity:1;
+visibility:visible;
+}
+.instructions-content{
+background:white;
+border-radius:8px;
+width:90%;
+max-width:500px;
+max-height:80%;
+overflow:auto;
+padding:20px;
+position:relative;
+}
+.instructions-close{
+position:absolute;
+top:10px;
+right:10px;
+background:none;
+border:none;
+font-size:24px;
+cursor:pointer;
+color:#666;
+}
 </style>
 </head>
 <body>
 <div class="instructions-container">
-    <button class="instructions-btn" id="instructionsBtn">?</button>
+<button class="instructions-btn" id="instructionsBtn">?</button>
 </div>
-
 <div id="sizeDisplay">
-    <input type="number" id="widthVal" class="size-input" value="3200" min="1" max="10000" style="color:green;" tabindex="0" /> ×
-    <input type="number" id="heightVal" class="size-input" value="5600" min="1" max="10000" style="color:goldenrod;" tabindex="0" />
+<input type="number" id="widthVal" class="size-input" value="3200" min="1" max="10000" style="color:green;" tabindex="0" /> ×
+<input type="number" id="heightVal" class="size-input" value="5600" min="1" max="10000" style="color:goldenrod;" tabindex="0" />
 </div>
-
 <label id="previewWrapper" for="uploadInput">
-    <canvas id="previewCanvas" width="128" height="128"></canvas>
-    <div id="plusText">+</div>
+<canvas id="previewCanvas" width="128" height="128"></canvas>
+<div id="plusText">+</div>
 </label>
 <input type="file" id="uploadInput" accept="image/*" style="display:none" />
-
 <input
-    type="range"
-    id="widthSlider"
-    min="1"
-    max="10000"
-    step="1"
-    value="3200"
-    style="accent-color: green;"
+type="range"
+id="widthSlider"
+min="1"
+max="10000"
+step="1"
+value="3200"
+style="accent-color: green;"
 />
 <input
-    type="range"
-    id="heightSlider"
-    min="1"
-    max="10000"
-    step="1"
-    value="5600"
-    style="accent-color: goldenrod;"
+type="range"
+id="heightSlider"
+min="1"
+max="10000"
+step="1"
+value="5600"
+style="accent-color: goldenrod;"
 />
-
 <button id="downloadBtn" data-i18n="download">Download</button>
-
 <div id="presets">
-    <div class="preset">8×8</div>
-    <div class="preset">64×64</div>
-    <div class="preset">128×128</div>
-    <div class="preset">256×256</div>
-    <div class="preset">516×516</div>
-    <div class="preset">1048×1048</div>
-    <div class="preset">177×177</div>
-    <div class="preset">512×1024</div>
+<div class="preset">8×8</div>
+<div class="preset">64×64</div>
+<div class="preset">128×128</div>
+<div class="preset">256×256</div>
+<div class="preset">516×516</div>
+<div class="preset">1048×1048</div>
+<div class="preset">177×177</div>
+<div class="preset">512×1024</div>
 </div>
-
 <canvas id="realCanvas"></canvas>
-
 <div class="lang-container">
-    <button class="lang" id="langRu">🇷🇺</button>
-    <button class="lang active" id="langEn">🇬🇧</button>
+<button class="lang" id="langRu">🇷🇺</button>
+<button class="lang active" id="langEn">🇬🇧</button>
 </div>
-
 <div class="instructions-overlay" id="instructionsOverlay">
-    <div class="instructions-content">
-        <button class="instructions-close" id="instructionsClose">×</button>
-        <h2 data-i18n="instructionTitle">Photo Machine Instructions</h2>
-        <ol>
-            <li data-i18n="instruction1">Click on the upload area to select an image.</li>
-            <br>
-            <li data-i18n="instruction2">Use the sliders or input fields to set the desired resolution.</li>
-            <br>
-            <li data-i18n="instruction3">Use presets for quick resolution selection.</li>
-            <br>
-            <li data-i18n="instruction4">Click the download button to save your image.</li>
-            <br>
-            <li data-i18n="instruction5">The preview shows how your image will look at the selected resolution.</li>
-        </ol>
-    </div>
+<div class="instructions-content">
+<button class="instructions-close" id="instructionsClose">×</button>
+<h2 data-i18n="instructionTitle">Photo Machine Instructions</h2>
+<ol>
+<li data-i18n="instruction1">Click on the upload area to select an image.</li>
+<br>
+<li data-i18n="instruction2">Use the sliders or input fields to set the desired resolution.</li>
+<br>
+<li data-i18n="instruction3">Use presets for quick resolution selection.</li>
+<br>
+<li data-i18n="instruction4">Click the download button to save your image.</li>
+<br>
+<li data-i18n="instruction5">The preview shows how your image will look at the selected resolution.</li>
+</ol>
 </div>
-
+</div>
 <script>
-    const translations = {
-        'ru': {
-            'download': 'Скачать',
-            'instructionTitle': 'Инструкция по работе с ФотоМашинкой',
-            'instruction1': 'Нажмите на область загрузки чтобы выбрать изображение.',
-            'instruction2': 'Используйте ползунки или поля ввода для установки нужного разрешения.',
-            'instruction3': 'Используйте пресеты для быстрого выбора разрешения.',
-            'instruction4': 'Нажмите кнопку скачать чтобы сохранить ваше изображение.',
-            'instruction5': 'В превью отображается как будет выглядеть ваше изображение при выбранном разрешении.'
-        },
-        'en': {
-            'download': 'Download',
-            'instructionTitle': 'Photo Machine Instructions',
-            'instruction1': 'Click on the upload area to select an image.',
-            'instruction2': 'Use the sliders or input fields to set the desired resolution.',
-            'instruction3': 'Use presets for quick resolution selection.',
-            'instruction4': 'Click the download button to save your image.',
-            'instruction5': 'The preview shows how your image will look at the selected resolution.'
-        }
-    };
-
-    let currentLang = 'en';
-
-    function setLanguage(lang) {
-        currentLang = lang;
-        localStorage.setItem('photoMachineLang', lang);
-        
-        document.getElementById('langRu').classList.toggle('active', lang === 'ru');
-        document.getElementById('langEn').classList.toggle('active', lang === 'en');
-        
-        document.querySelectorAll('[data-i18n]').forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            if (translations[lang][key]) {
-                element.innerHTML = translations[lang][key];
-            }
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const savedLang = localStorage.getItem('photoMachineLang') || 'en';
-        setLanguage(savedLang);
-        
-        document.getElementById('langRu').addEventListener('click', () => setLanguage('ru'));
-        document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
-
-        document.getElementById('instructionsBtn').addEventListener('click', () => {
-            document.getElementById('instructionsOverlay').classList.add('active');
-        });
-
-        document.getElementById('instructionsClose').addEventListener('click', () => {
-            document.getElementById('instructionsOverlay').classList.remove('active');
-        });
-
-        document.getElementById('instructionsOverlay').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('instructionsOverlay')) {
-                document.getElementById('instructionsOverlay').classList.remove('active');
-            }
-        });
-    });
-
-    const uploadInput = document.getElementById("uploadInput");
-    const previewCanvas = document.getElementById("previewCanvas");
-    const previewCtx = previewCanvas.getContext("2d");
-    const realCanvas = document.getElementById("realCanvas");
-    const realCtx = realCanvas.getContext("2d");
-    const plusText = document.getElementById("plusText");
-
-    const widthSlider = document.getElementById("widthSlider");
-    const heightSlider = document.getElementById("heightSlider");
-    const widthValInput = document.getElementById("widthVal");
-    const heightValInput = document.getElementById("heightVal");
-    const presets = document.querySelectorAll(".preset");
-
-    let image = null;
-
-    function updateSizeDisplay() {
-        widthValInput.value = widthSlider.value;
-        heightValInput.value = heightSlider.value;
-    }
-
-    function updatePreviewCanvasSize() {
-        const w = parseInt(widthSlider.value);
-        const h = parseInt(heightSlider.value);
-        const maxSize = 256;
-        const minSideSize = 40;
-
-        let scale;
-
-        if (w > h) {
-            scale = maxSize / w;
-            let scaledH = h * scale;
-            if (scaledH < minSideSize) {
-                scale = minSideSize / h;
-            }
-        } else {
-            scale = maxSize / h;
-            let scaledW = w * scale;
-            if (scaledW < minSideSize) {
-                scale = minSideSize / w;
-            }
-        }
-
-        const displayW = Math.round(w * scale);
-        const displayH = Math.round(h * scale);
-
-        previewCanvas.width = w;
-        previewCanvas.height = h;
-        previewCanvas.style.width = displayW + "px";
-        previewCanvas.style.height = displayH + "px";
-    }
-
-    function drawPreview() {
-        const w = parseInt(widthSlider.value);
-        const h = parseInt(heightSlider.value);
-        if (!image || w < 1 || h < 1) return;
-
-        const tempCanvas = document.createElement("canvas");
-        const tempCtx = tempCanvas.getContext("2d");
-        tempCanvas.width = w;
-        tempCanvas.height = h;
-
-        tempCtx.fillStyle = "white";
-        tempCtx.fillRect(0, 0, w, h);
-        tempCtx.imageSmoothingEnabled = false;
-
-        const ratio = Math.min(w / image.width, h / image.height, 1);
-        const drawW = image.width * ratio;
-        const drawH = image.height * ratio;
-        const dx = (w - drawW) / 2;
-        const dy = (h - drawH) / 2;
-        tempCtx.drawImage(image, dx, dy, drawW, drawH);
-
-        previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
-        previewCtx.fillStyle = "white";
-        previewCtx.fillRect(0, 0, previewCanvas.width, previewCanvas.height);
-        previewCtx.imageSmoothingEnabled = false;
-        previewCtx.drawImage(tempCanvas, 0, 0);
-    }
-
-    function drawFinalCanvas() {
-        const w = parseInt(widthSlider.value);
-        const h = parseInt(heightSlider.value);
-        if (!image || w < 1 || h < 1) return;
-
-        realCanvas.width = w;
-        realCanvas.height = h;
-
-        realCtx.fillStyle = "white";
-        realCtx.fillRect(0, 0, w, h);
-        realCtx.imageSmoothingEnabled = false;
-
-        const ratio = Math.min(w / image.width, h / image.height, 1);
-        const drawW = image.width * ratio;
-        const drawH = image.height * ratio;
-        const dx = (w - drawW) / 2;
-        const dy = (h - drawH) / 2;
-        realCtx.drawImage(image, dx, dy, drawW, drawH);
-    }
-
-    function updateAll() {
-        updateSizeDisplay();
-        updatePreviewCanvasSize();
-        drawPreview();
-    }
-
-    function handleManualInput(inputElement, sliderElement) {
-        let value = parseInt(inputElement.value);
-        const min = parseInt(inputElement.min);
-        const max = parseInt(inputElement.max);
-
-        if (isNaN(value) || value < min) {
-            value = min;
-        } else if (value > max) {
-            value = max;
-        }
-
-        inputElement.value = value;
-        sliderElement.value = value;
-        updateAll();
-    }
-
-    widthValInput.addEventListener('blur', () => handleManualInput(widthValInput, widthSlider));
-    heightValInput.addEventListener('blur', () => handleManualInput(heightValInput, heightSlider));
-
-    widthValInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            widthValInput.blur();
-        }
-    });
-
-    heightValInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            heightValInput.blur();
-        }
-    });
-
-    uploadInput.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function (evt) {
-            image = new Image();
-            image.onload = () => {
-                plusText.style.display = "none";
-                updateAll();
-            };
-            image.src = evt.target.result;
-        };
-        reader.readAsDataURL(file);
-    });
-
-    widthSlider.addEventListener("input", updateAll);
-    heightSlider.addEventListener("input", updateAll);
-
-    document.getElementById("downloadBtn").addEventListener("click", () => {
-        if (!image) {
-            alert(currentLang === 'ru' ? "Сначала выберите изображение" : "Please select an image first");
-            return;
-        }
-        drawFinalCanvas();
-        const w = widthSlider.value;
-        const h = heightSlider.value;
-        const link = document.createElement("a");
-        link.download = `image_${w}x${h}.png`;
-        link.href = realCanvas.toDataURL();
-        link.click();
-    });
-
-    presets.forEach((btn) => {
-        btn.addEventListener("click", () => {
-            const [w, h] = btn.textContent.split("×").map(Number);
-            widthSlider.value = w;
-            heightSlider.value = h;
-            updateAll();
-        });
-    });
-
-    updateAll();
+const translations={
+'ru':{
+'download':'Скачать',
+'instructionTitle':'Инструкция по работе с ФотоМашинкой',
+'instruction1':'Нажмите на область загрузки чтобы выбрать изображение.',
+'instruction2':'Используйте ползунки или поля ввода для установки нужного разрешения.',
+'instruction3':'Используйте пресеты для быстрого выбора разрешения.',
+'instruction4':'Нажмите кнопку скачать чтобы сохранить ваше изображение.',
+'instruction5':'В превью отображается как будет выглядеть ваше изображение при выбранном разрешении.'
+},
+'en':{
+'download':'Download',
+'instructionTitle':'Photo Machine Instructions',
+'instruction1':'Click on the upload area to select an image.',
+'instruction2':'Use the sliders or input fields to set the desired resolution.',
+'instruction3':'Use presets for quick resolution selection.',
+'instruction4':'Click the download button to save your image.',
+'instruction5':'The preview shows how your image will look at the selected resolution.'
+}
+};
+let currentLang='en';
+function setLanguage(lang){
+currentLang=lang;
+localStorage.setItem('photoMachineLang',lang);
+document.getElementById('langRu').classList.toggle('active',lang==='ru');
+document.getElementById('langEn').classList.toggle('active',lang==='en');
+document.querySelectorAll('[data-i18n]').forEach(element=>{
+const key=element.getAttribute('data-i18n');
+if(translations[lang][key]){
+element.innerHTML=translations[lang][key];
+}
+});
+}
+document.addEventListener('DOMContentLoaded',()=>{
+const savedLang=localStorage.getItem('photoMachineLang')||'en';
+setLanguage(savedLang);
+document.getElementById('langRu').addEventListener('click',()=>setLanguage('ru'));
+document.getElementById('langEn').addEventListener('click',()=>setLanguage('en'));
+document.getElementById('instructionsBtn').addEventListener('click',()=>{
+document.getElementById('instructionsOverlay').classList.add('active');
+});
+document.getElementById('instructionsClose').addEventListener('click',()=>{
+document.getElementById('instructionsOverlay').classList.remove('active');
+});
+document.getElementById('instructionsOverlay').addEventListener('click',(e)=>{
+if(e.target===document.getElementById('instructionsOverlay')){
+document.getElementById('instructionsOverlay').classList.remove('active');
+}
+});
+});
+const uploadInput=document.getElementById("uploadInput");
+const previewCanvas=document.getElementById("previewCanvas");
+const previewCtx=previewCanvas.getContext("2d");
+const realCanvas=document.getElementById("realCanvas");
+const realCtx=realCanvas.getContext("2d");
+const plusText=document.getElementById("plusText");
+const widthSlider=document.getElementById("widthSlider");
+const heightSlider=document.getElementById("heightSlider");
+const widthValInput=document.getElementById("widthVal");
+const heightValInput=document.getElementById("heightVal");
+const presets=document.querySelectorAll(".preset");
+let image=null;
+function updateSizeDisplay(){
+widthValInput.value=widthSlider.value;
+heightValInput.value=heightSlider.value;
+}
+function updatePreviewCanvasSize(){
+const w=parseInt(widthSlider.value);
+const h=parseInt(heightSlider.value);
+const maxSize=256;
+const minSideSize=40;
+let scale;
+if(w>h){
+scale=maxSize/w;
+let scaledH=h*scale;
+if(scaledH<minSideSize){
+scale=minSideSize/h;
+}
+}else{
+scale=maxSize/h;
+let scaledW=w*scale;
+if(scaledW<minSideSize){
+scale=minSideSize/w;
+}
+}
+const displayW=Math.round(w*scale);
+const displayH=Math.round(h*scale);
+previewCanvas.width=w;
+previewCanvas.height=h;
+previewCanvas.style.width=displayW+"px";
+previewCanvas.style.height=displayH+"px";
+}
+function drawPreview(){
+const w=parseInt(widthSlider.value);
+const h=parseInt(heightSlider.value);
+if(!image||w<1||h<1)return;
+const tempCanvas=document.createElement("canvas");
+const tempCtx=tempCanvas.getContext("2d");
+tempCanvas.width=w;
+tempCanvas.height=h;
+tempCtx.fillStyle="white";
+tempCtx.fillRect(0,0,w,h);
+tempCtx.imageSmoothingEnabled=false;
+const ratio=Math.min(w/image.width,h/image.height,1);
+const drawW=image.width*ratio;
+const drawH=image.height*ratio;
+const dx=(w-drawW)/2;
+const dy=(h-drawH)/2;
+tempCtx.drawImage(image,dx,dy,drawW,drawH);
+previewCtx.clearRect(0,0,previewCanvas.width,previewCanvas.height);
+previewCtx.fillStyle="white";
+previewCtx.fillRect(0,0,previewCanvas.width,previewCanvas.height);
+previewCtx.imageSmoothingEnabled=false;
+previewCtx.drawImage(tempCanvas,0,0);
+}
+function drawFinalCanvas(){
+const w=parseInt(widthSlider.value);
+const h=parseInt(heightSlider.value);
+if(!image||w<1||h<1)return;
+realCanvas.width=w;
+realCanvas.height=h;
+realCtx.fillStyle="white";
+realCtx.fillRect(0,0,w,h);
+realCtx.imageSmoothingEnabled=false;
+const ratio=Math.min(w/image.width,h/image.height,1);
+const drawW=image.width*ratio;
+const drawH=image.height*ratio;
+const dx=(w-drawW)/2;
+const dy=(h-drawH)/2;
+realCtx.drawImage(image,dx,dy,drawW,drawH);
+}
+function updateAll(){
+updateSizeDisplay();
+updatePreviewCanvasSize();
+drawPreview();
+}
+function handleManualInput(inputElement,sliderElement){
+let value=parseInt(inputElement.value);
+const min=parseInt(inputElement.min);
+const max=parseInt(inputElement.max);
+if(isNaN(value)||value<min){
+value=min;
+}else if(value>max){
+value=max;
+}
+inputElement.value=value;
+sliderElement.value=value;
+updateAll();
+}
+widthValInput.addEventListener('blur',()=>handleManualInput(widthValInput,widthSlider));
+heightValInput.addEventListener('blur',()=>handleManualInput(heightValInput,heightSlider));
+widthValInput.addEventListener('keydown',(e)=>{
+if(e.key==='Enter'){
+widthValInput.blur();
+}
+});
+heightValInput.addEventListener('keydown',(e)=>{
+if(e.key==='Enter'){
+heightValInput.blur();
+}
+});
+uploadInput.addEventListener("change",(e)=>{
+const file=e.target.files[0];
+if(!file)return;
+const reader=new FileReader();
+reader.onload=function(evt){
+image=new Image();
+image.onload=()=>{
+plusText.style.display="none";
+updateAll();
+};
+image.src=evt.target.result;
+};
+reader.readAsDataURL(file);
+});
+widthSlider.addEventListener("input",updateAll);
+heightSlider.addEventListener("input",updateAll);
+document.getElementById("downloadBtn").addEventListener("click",()=>{
+if(!image){
+alert(currentLang==='ru'?"Сначала выберите изображение":"Please select an image first");
+return;
+}
+drawFinalCanvas();
+const w=widthSlider.value;
+const h=heightSlider.value;
+const link=document.createElement("a");
+link.download=`image_${w}x${h}.png`;
+link.href=realCanvas.toDataURL();
+link.click();
+});
+presets.forEach((btn)=>{
+btn.addEventListener("click",()=>{
+const[w,h]=btn.textContent.split("×").map(Number);
+widthSlider.value=w;
+heightSlider.value=h;
+updateAll();
+});
+});
+updateAll();
 </script>
 </body>
-</html> 
+</html>

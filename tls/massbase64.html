@@ -235,54 +235,54 @@ border: 2px solid #4a76a8;
 </style>
 </head>
 <body>
-<h1 data-i18n="massTitle">📦 Массовый BASE64</h1>
-<div id="desc" data-i18n="massDesc">Вставьте фото, чтобы создать .txt-файл с base64</div>
+<h1 data-i18n="massTitle">📦 Mass BASE64</h1>
+<div id="desc" data-i18n="massDesc">Insert photos to create .txt file with base64</div>
 
 <div id="plus-container">
-<label id="plus-label" for="file-input" tabindex="0" aria-label="Добавить файлы">＋</label>
+<label id="plus-label" for="file-input" tabindex="0" aria-label="Add files">＋</label>
 <div id="count">0</div>
 </div>
 
 <input type="file" id="file-input" multiple accept="image/*" />
 
-<button id="generate-btn" disabled data-i18n="createBase64">СОЗДАТЬ БАЗ64 В txt</button>
+<button id="generate-btn" disabled data-i18n="createBase64">CREATE BASE64 IN TXT</button>
 
 <hr>
 
-<h1 data-i18n="infoMassTitle">📦 Информатор массового BASE64</h1>
-<div id="desc" data-i18n="infoMassDesc">Загрузите .txt файл с несколькими base64.</div>
+<h1 data-i18n="infoMassTitle">📦 Mass BASE64 Informer</h1>
+<div id="desc" data-i18n="infoMassDesc">Upload .txt file with multiple base64.</div>
 
 <div id="upload-container">
-<label id="upload-label" for="file-input2" tabindex="0" aria-label="Загрузить файл">📁</label>
+<label id="upload-label" for="file-input2" tabindex="0" aria-label="Upload file">📁</label>
 </div>
 
 <input type="file" id="file-input2" accept=".txt" />
 
 <div id="status"></div>
 
-<button id="decode-btn" disabled data-i18n="decodeBase64">РАСШИФРОВАТЬ BASE64</button>
+<button id="decode-btn" disabled data-i18n="decodeBase64">DECODE BASE64</button>
 
 <div id="gallery"></div>
 
-<button id="reset-btn" style="display:none;" data-i18n="reset">🔄 Сбросить</button>
+<button id="reset-btn" style="display:none;" data-i18n="reset">🔄 Reset</button>
 
 <div class="instructions-container">
 <details>
-<summary><h3 data-i18n="instructionTitle">Инструкция по использованию Массового BASE64</h3></summary>
+<summary><h3 data-i18n="instructionTitle">Mass BASE64 Instructions</h3></summary>
 <ol>
-<li data-i18n="instruction1">В верхней части загрузите несколько изображений, нажав на кнопку «+».</li>
+<li data-i18n="instruction1">In the top section, upload multiple images by clicking the «+» button.</li>
 <br>
-<li data-i18n="instruction2">Счетчик покажет количество выбранных файлов.</li>
+<li data-i18n="instruction2">The counter will show the number of selected files.</li>
 <br>
-<li data-i18n="instruction3">Нажмите «Создать Base64 в txt» для генерации файла со всеми изображениями.</li>
+<li data-i18n="instruction3">Click «Create Base64 in txt» to generate a file with all images.</li>
 <br>
-<li data-i18n="instruction4">В нижней части загрузите созданный .txt файл с Base64 данными.</li>
+<li data-i18n="instruction4">In the bottom section, upload the created .txt file with Base64 data.</li>
 <br>
-<li data-i18n="instruction5">Нажмите «Расшифровать Base64» для декодирования всех изображений.</li>
+<li data-i18n="instruction5">Click «Decode Base64» to decode all images.</li>
 <br>
-<li data-i18n="instruction6">Галерея покажет все успешно декодированные изображения.</li>
+<li data-i18n="instruction6">The gallery will show all successfully decoded images.</li>
 <br>
-<li data-i18n="instruction7">Используйте «Сбросить» для очистки результатов и начала заново.</li>
+<li data-i18n="instruction7">Use «Reset» to clear results and start over.</li>
 </ol>
 </details>
 </div>
@@ -348,7 +348,7 @@ element.innerHTML = translations[lang][key];
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-const savedLang = localStorage.getItem('massBase64Lang') || 'ru';
+const savedLang = localStorage.getItem('massBase64Lang') || 'en'; 
 setLanguage(savedLang);
 
 document.getElementById('langRu').addEventListener('click', () => setLanguage('ru'));
@@ -369,7 +369,7 @@ function toBase64(file) {
 return new Promise((resolve, reject) => {
 const reader = new FileReader();
 reader.onload = () => resolve(reader.result);
-reader.onerror = () => reject('Ошибка чтения файла ' + file.name);
+reader.onerror = () => reject('Error reading file ' + file.name);
 reader.readAsDataURL(file);
 });
 }
@@ -381,11 +381,11 @@ updateUI();
 
 generateBtn.addEventListener('click', async () => {
 if (files.length === 0) {
-alert('Вы не вставили ни одного файла!');
+alert('You haven\'t inserted any files!');
 return;
 }
 generateBtn.disabled = true;
-generateBtn.textContent = 'ГЕНЕРАЦИЯ...';
+generateBtn.textContent = 'GENERATING...';
 
 try {
 let result = '';
@@ -402,7 +402,7 @@ a.download = 'massbase64.txt';
 a.click();
 URL.revokeObjectURL(url);
 } catch (e) {
-alert('Ошибка при генерации: ' + e);
+alert('Generation error: ' + e);
 } finally {
 generateBtn.disabled = false;
 generateBtn.textContent = translations[currentLang]['createBase64'];
@@ -426,14 +426,14 @@ if (!file) return;
 const reader = new FileReader();
 reader.onload = (event) => {
 fileContent = event.target.result;
-statusDiv.textContent = `📄 Файл "${file.name}" загружен`;
+statusDiv.textContent = `📄 File "${file.name}" loaded`;
 statusDiv.style.color = '#000';
 decodeBtn.disabled = false;
 
 previewFileStructure(fileContent);
 };
 reader.onerror = () => {
-statusDiv.textContent = '❌ Ошибка чтения файла';
+statusDiv.textContent = '❌ Error reading file';
 statusDiv.style.color = '#ff4444';
 };
 reader.readAsText(file);
@@ -441,13 +441,13 @@ reader.readAsText(file);
 
 decodeBtn.addEventListener('click', () => {
 if (!fileContent) {
-statusDiv.textContent = '❌ Нет загруженного файла';
+statusDiv.textContent = '❌ No file loaded';
 statusDiv.style.color = '#ff4444';
 return;
 }
 
 decodeBtn.disabled = true;
-decodeBtn.textContent = 'ОБРАБОТКА...';
+decodeBtn.textContent = 'PROCESSING...';
 gallery.innerHTML = '';
 
 processMassBase64(fileContent);
@@ -456,7 +456,7 @@ processMassBase64(fileContent);
 resetBtn.addEventListener('click', resetAll);
 
 function previewFileStructure(content) {
-console.log("=== ПРЕДПРОСМОТР СТРУКТУРЫ ФАЙЛА ===");
+console.log("=== FILE STRUCTURE PREVIEW ===");
 const lines = content.split('\n');
 let blockCount = 0;
 let inBlock = false;
@@ -465,15 +465,15 @@ lines.forEach((line, index) => {
 if (line.startsWith('===') && line.includes('===')) {
 blockCount++;
 inBlock = true;
-console.log(`Блок ${blockCount}: ${line.trim()}`);
+console.log(`Block ${blockCount}: ${line.trim()}`);
 } else if (line.trim() === '' && inBlock) {
 inBlock = false;
 } else if (inBlock && line.includes('data:')) {
-console.log(`  Данные: ${line.substring(0, 50)}...`);
+console.log(`  Data: ${line.substring(0, 50)}...`);
 }
 });
 
-console.log(`Всего блоков найдено: ${blockCount}`);
+console.log(`Total blocks found: ${blockCount}`);
 }
 
 function processMassBase64(content) {
@@ -510,10 +510,10 @@ if (currentBlock && currentBlock.data) {
 blocks.push(currentBlock);
 }
 
-console.log("Найдено блоков:", blocks.length);
+console.log("Blocks found:", blocks.length);
 
 if (blocks.length === 0) {
-statusDiv.textContent = '❌ Не найдено валидных блоков base64';
+statusDiv.textContent = '❌ No valid base64 blocks found';
 statusDiv.style.color = '#ff4444';
 decodeBtn.disabled = false;
 decodeBtn.textContent = translations[currentLang]['decodeBase64'];
@@ -538,12 +538,12 @@ nameSpan.textContent = filename || `image_${index + 1}`;
 
 const debugInfo = document.createElement('div');
 debugInfo.className = 'debug-info';
-debugInfo.textContent = `Блок ${index + 1}`;
+debugInfo.textContent = `Block ${index + 1}`;
 
 if (!data) {
 const errorDiv = document.createElement('div');
 errorDiv.className = 'image-error';
-errorDiv.textContent = '❌ Нет данных';
+errorDiv.textContent = '❌ No data';
 imageItem.appendChild(errorDiv);
 imageItem.appendChild(nameSpan);
 imageItem.appendChild(debugInfo);
@@ -565,7 +565,7 @@ function handleError() {
 clearTimeout(timeoutId);
 const errorDiv = document.createElement('div');
 errorDiv.className = 'image-error';
-errorDiv.textContent = '❌ Ошибка декодирования';
+errorDiv.textContent = '❌ Decoding error';
 imageItem.appendChild(errorDiv);
 imageItem.appendChild(nameSpan);
 imageItem.appendChild(debugInfo);
@@ -601,13 +601,13 @@ processedCount++;
 
 if (processedCount === blocks.length) {
 if (validCount === 0) {
-statusDiv.textContent = `❌ Все ${blocks.length} блоков содержат ошибки`;
+statusDiv.textContent = `❌ All ${blocks.length} blocks contain errors`;
 statusDiv.style.color = '#ff4444';
 } else if (errorCount === 0) {
-statusDiv.textContent = `✅ Все ${validCount} изображений успешно декодированы`;
+statusDiv.textContent = `✅ All ${validCount} images successfully decoded`;
 statusDiv.style.color = '#00aa00';
 } else {
-statusDiv.textContent = `⚠️ Успешно: ${validCount}, Ошибок: ${errorCount} из ${blocks.length}`;
+statusDiv.textContent = `⚠️ Success: ${validCount}, Errors: ${errorCount} out of ${blocks.length}`;
 statusDiv.style.color = '#ff8800';
 }
 
@@ -615,7 +615,7 @@ decodeBtn.disabled = false;
 decodeBtn.textContent = translations[currentLang]['decodeBase64'];
 resetBtn.style.display = 'block';
 } else {
-statusDiv.textContent = `Обработка: ${processedCount}/${blocks.length}`;
+statusDiv.textContent = `Processing: ${processedCount}/${blocks.length}`;
 }
 }
 }

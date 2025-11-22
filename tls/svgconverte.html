@@ -1,323 +1,257 @@
-<!DOCTYPE html>
-<html lang="ru">
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="«SVG конвертер» от «Asirus»: Загрузите своё фото, и получите его в формате .svg">
-<link rel="icon" href="/res/img/favicon.png">
-<title>SVG Конвертер</title>
+<meta name="description" content="«SVG converter» by «Asirus»: Upload your photo and get it in the format .svg">
+<link rel="icon" type="image/png" href="/res/img/favicon.png">
+<title>SVG Converter</title>
 <style>
-  body { 
-    font-family: sans-serif; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    padding: 20px; 
-    padding-bottom: 50px; 
-    gap: 10px; 
-  }
-  img { 
-    max-width: 200px; 
-    max-height: 200px; 
-    border: 1px solid #ccc; 
-  }
-  button { 
-    padding: 8px 16px; 
-    cursor: pointer; 
-  }
-
-  /* Стили для инструкций и языка из hex-editor */
-  .lang-container {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      display: flex;
-      gap: 5px;
-      z-index: 101;
-  }
-  
-  .lang {
-      width: 30px;
-      height: 30px;
-      overflow: hidden;
-      font-size: 24px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      cursor: pointer;
-  }
-  
-  .lang:hover {
-      background: #f0f0f0;
-  }
-  
-  .lang.active {
-      border: 2px solid #4b6cb7;
-  }
-
-  .instructions-container {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-  }
-
-  .instructions-btn {
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      background: #4b6cb7;
-      color: white;
-      border: none;
-      font-size: 18px;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  }
-
-  .instructions-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-  }
-
-  .instructions-overlay.active {
-      opacity: 1;
-      visibility: visible;
-  }
-
-  .instructions-content {
-      background: white;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 500px;
-      max-height: 80%;
-      overflow: auto;
-      padding: 20px;
-      position: relative;
-  }
-
-  .instructions-close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: #666;
-  }
+body{
+font-family:sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:20px;
+padding-bottom:50px;
+gap:10px;
+}
+img{
+max-width:200px;
+max-height:200px;
+border:1px solid #ccc;
+}
+button{
+padding:8px 16px;
+cursor:pointer;
+}
+.lang-container{
+position:fixed;
+bottom:10px;
+right:10px;
+display:flex;
+gap:5px;
+z-index:101;
+}
+.lang{
+width:30px;
+height:30px;
+overflow:hidden;
+font-size:24px;
+display:flex;
+justify-content:center;
+align-items:center;
+background:white;
+border:1px solid #ccc;
+border-radius:4px;
+cursor:pointer;
+}
+.lang:hover{
+background:#f0f0f0;
+}
+.lang.active{
+border:2px solid #4b6cb7;
+}
+.instructions-container{
+position:absolute;
+top:10px;
+left:10px;
+}
+.instructions-btn{
+width:35px;
+height:35px;
+border-radius:50%;
+background:#4b6cb7;
+color:white;
+border:none;
+font-size:18px;
+cursor:pointer;
+display:flex;
+justify-content:center;
+align-items:center;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
+}
+.instructions-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:1000;
+opacity:0;
+visibility:hidden;
+transition:all 0.3s ease;
+}
+.instructions-overlay.active{
+opacity:1;
+visibility:visible;
+}
+.instructions-content{
+background:white;
+border-radius:8px;
+width:90%;
+max-width:500px;
+max-height:80%;
+overflow:auto;
+padding:20px;
+position:relative;
+}
+.instructions-close{
+position:absolute;
+top:10px;
+right:10px;
+background:none;
+border:none;
+font-size:24px;
+cursor:pointer;
+color:#666;
+}
 </style>
 </head>
 <body>
-  <div class="instructions-container">
-      <button class="instructions-btn" id="instructionsBtn">?</button>
-  </div>
-
-  <h2 data-i18n="title">SVG Конвертер</h2>
-  <h5 data-i18n="subtitle">Загрузите своё фото, и получите svg версию своего фото!</h5>
-  <p data-i18n="warning">[ ! ] Внимание! Если фото огромное, то svg будет весить в 50 раз больше. Если загрузить большое фото, браузер может не загрузить .svg. Советуется для маленьких пиксельных картинок.</p>
-  <input type="file" id="fileInput" accept="image/*">
-  <img id="preview" alt="Preview">
-  <button id="downloadBtn" disabled data-i18n="download">Скачать SVG</button>
-
-  <!-- Language selector -->
-  <div class="lang-container">
-      <button class="lang" id="langRu">🇷🇺</button>
-      <button class="lang active" id="langEn">🇬🇧</button>
-  </div>
-
-  <!-- Instructions Overlay -->
-  <div class="instructions-overlay" id="instructionsOverlay">
-      <div class="instructions-content">
-          <button class="instructions-close" id="instructionsClose">×</button>
-          <h2 data-i18n="instructionTitle">Инструкция по работе с SVG Конвертером</h2>
-          <ol>
-              <li data-i18n="instruction1">Нажмите на поле выбора файла чтобы загрузить изображение.</li>
-              <br>
-              <li data-i18n="instruction2">После загрузки изображение появится в области предпросмотра.</li>
-              <br>
-              <li data-i18n="instruction3">Нажмите кнопку «Скачать SVG» чтобы скачать преобразованное изображение.</li>
-              <br>
-              <li data-i18n="instruction4">Для лучших результатов используйте небольшие изображения с низким разрешением.</li>
-              <br>
-              <li data-i18n="instruction5">Изображения с прозрачным фоном лучше конвертируются в SVG.</li>
-          </ol>
-      </div>
-  </div>
-
-  <script>
-      // Language support
-      const translations = {
-          'ru': {
-              'title': 'SVG Конвертер',
-              'subtitle': 'Загрузите своё фото, и получите svg версию своего фото!',
-              'warning': '[ ! ] Внимание! Если фото огромное, то svg будет весить в 50 раз больше. Если загрузить большое фото, браузер может не загрузить .svg. Советуется для маленьких пиксельных картинок.',
-              'download': 'Скачать SVG',
-              'instructionTitle': 'Инструкция по работе с SVG Конвертером',
-              'instruction1': 'Нажмите на поле выбора файла чтобы загрузить изображение.',
-              'instruction2': 'После загрузки изображение появится в области предпросмотра.',
-              'instruction3': 'Нажмите кнопку «Скачать SVG» чтобы скачать преобразованное изображение.',
-              'instruction4': 'Для лучших результатов используйте небольшие изображения с низким разрешением.',
-              'instruction5': 'Изображения с прозрачным фоном лучше конвертируются в SVG.'
-          },
-          'en': {
-              'title': 'SVG Converter',
-              'subtitle': 'Upload your photo and get its SVG version!',
-              'warning': '[ ! ] Warning! If the photo is huge, the SVG will weigh 50 times more. If you upload a large photo, the browser may not load the .svg. Recommended for small pixel images.',
-              'download': 'Download SVG',
-              'instructionTitle': 'SVG Converter Instructions',
-              'instruction1': 'Click on the file selection field to upload an image.',
-              'instruction2': 'After uploading, the image will appear in the preview area.',
-              'instruction3': 'Click the "Download SVG" button to download the converted image.',
-              'instruction4': 'For best results, use small images with low resolution.',
-              'instruction5': 'Images with transparent background convert better to SVG.'
-          }
-      };
-
-      // Language management
-      let currentLang = 'ru';
-
-      function setLanguage(lang) {
-          currentLang = lang;
-          localStorage.setItem('svgConverterLang', lang);
-          
-          // Update active button
-          document.getElementById('langRu').classList.toggle('active', lang === 'ru');
-          document.getElementById('langEn').classList.toggle('active', lang === 'en');
-          
-          // Update all translatable elements
-          document.querySelectorAll('[data-i18n]').forEach(element => {
-              const key = element.getAttribute('data-i18n');
-              if (translations[lang][key]) {
-                  element.innerHTML = translations[lang][key];
-              }
-          });
-      }
-
-      // Initialize language
-      document.addEventListener('DOMContentLoaded', () => {
-          const savedLang = localStorage.getItem('svgConverterLang') || 'ru';
-          setLanguage(savedLang);
-          
-          // Language button event listeners
-          document.getElementById('langRu').addEventListener('click', () => setLanguage('ru'));
-          document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
-
-          // Instructions button
-          document.getElementById('instructionsBtn').addEventListener('click', () => {
-              document.getElementById('instructionsOverlay').classList.add('active');
-          });
-
-          // Close instructions
-          document.getElementById('instructionsClose').addEventListener('click', () => {
-              document.getElementById('instructionsOverlay').classList.remove('active');
-          });
-
-          // Close instructions when clicking outside
-          document.getElementById('instructionsOverlay').addEventListener('click', (e) => {
-              if (e.target === document.getElementById('instructionsOverlay')) {
-                  document.getElementById('instructionsOverlay').classList.remove('active');
-              }
-          });
-      });
-
-      const fileInput = document.getElementById('fileInput');
-      const preview = document.getElementById('preview');
-      const downloadBtn = document.getElementById('downloadBtn');
-
-      /**
-       * Функция для добавления ведущего нуля к числу (например, 5 -> 05)
-       * @param {number} number 
-       * @returns {string}
-       */
-      const pad = (number) => (number < 10 ? '0' : '') + number;
-
-      // --- Самое важное изменение тут, внутри обработчика ---
-      fileInput.addEventListener('change', () => {
-          const file = fileInput.files[0];
-          if (!file) return;
-
-          const reader = new FileReader();
-          reader.onload = e => {
-              const img = new Image();
-              img.onload = () => {
-                  const width = img.width;
-                  const height = img.height;
-
-                  // Canvas для получения пикселей
-                  const canvas = document.createElement('canvas');
-                  canvas.width = width;
-                  canvas.height = height;
-                  const ctx = canvas.getContext('2d');
-                  ctx.drawImage(img, 0, 0);
-
-                  const imageData = ctx.getImageData(0, 0, width, height).data;
-
-                  // Генерация SVG с <rect> для каждого пикселя
-                  let svgRects = '';
-                  for (let y = 0; y < height; y++) {
-                      for (let x = 0; x < width; x++) {
-                          const idx = (y * width + x) * 4;
-                          const r = imageData[idx];
-                          const g = imageData[idx + 1];
-                          const b = imageData[idx + 2];
-                          const a = imageData[idx + 3] / 255;
-                          if (a > 0) { // пропускаем прозрачные
-                              svgRects += `<rect x="${x}" y="${y}" width="1" height="1" fill="rgba(${r},${g},${b},${a})"/>`;
-                          }
-                      }
-                  }
-
-                  const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">${svgRects}</svg>`;
-
-                  // Создаем ссылку для скачивания
-                  const blob = new Blob([svgContent], { type: "image/svg+xml" });
-                  const url = URL.createObjectURL(blob);
-
-                  // --- Генерация имени файла ---
-                  const now = new Date();
-                  // Генерируем случайное число из 5 цифр (от 10000 до 99999)
-                  const randomNumber = Math.floor(10000 + Math.random() * 90000); 
-
-                  const filename = 
-                      `${now.getFullYear()}.` +
-                      `${pad(now.getMonth() + 1)}.` + // Месяцы в JS с 0, поэтому + 1
-                      `${pad(now.getDate())}.` +
-                      `${pad(now.getHours())};` + // Разделитель ; для часов и минут
-                      `${pad(now.getMinutes())}.` +
-                      `${randomNumber}.svg`; 
-                  // ---------------------------
-
-                  downloadBtn.onclick = () => {
-                      const a = document.createElement('a');
-                      a.href = url;
-                      a.download = filename; // Используем сгенерированное имя
-                      a.click();
-                      URL.revokeObjectURL(url);
-                  };
-                  downloadBtn.disabled = false;
-
-                  preview.src = e.target.result;
-              };
-              img.src = e.target.result;
-          };
-          reader.readAsDataURL(file);
-      });
-  </script>
+<div class="instructions-container">
+<button class="instructions-btn" id="instructionsBtn">?</button>
+</div>
+<h2 data-i18n="title">SVG Конвертер</h2>
+<h5 data-i18n="subtitle">Загрузите своё фото, и получите svg версию своего фото!</h5>
+<p data-i18n="warning">[ ! ] Внимание! Если фото огромное, то svg будет весить в 50 раз больше. Если загрузить большое фото, браузер может не загрузить .svg. Советуется для маленьких пиксельных картинок.</p>
+<input type="file" id="fileInput" accept="image/*">
+<img id="preview" alt="Preview">
+<button id="downloadBtn" disabled data-i18n="download">Скачать SVG</button>
+<div class="lang-container">
+<button class="lang" id="langRu">🇷🇺</button>
+<button class="lang active" id="langEn">🇬🇧</button>
+</div>
+<div class="instructions-overlay" id="instructionsOverlay">
+<div class="instructions-content">
+<button class="instructions-close" id="instructionsClose">×</button>
+<h2 data-i18n="instructionTitle">Инструкция по работе с SVG Конвертером</h2>
+<ol>
+<li data-i18n="instruction1">Нажмите на поле выбора файла чтобы загрузить изображение.</li>
+<br>
+<li data-i18n="instruction2">После загрузки изображение появится в области предпросмотра.</li>
+<br>
+<li data-i18n="instruction3">Нажмите кнопку «Скачать SVG» чтобы скачать преобразованное изображение.</li>
+<br>
+<li data-i18n="instruction4">Для лучших результатов используйте небольшие изображения с низким разрешением.</li>
+<br>
+<li data-i18n="instruction5">Изображения с прозрачным фоном лучше конвертируются в SVG.</li>
+</ol>
+</div>
+</div>
+<script>
+const translations={
+'ru':{
+'title':'SVG Конвертер',
+'subtitle':'Загрузите своё фото, и получите svg версию своего фото!',
+'warning':'[ ! ] Внимание! Если фото огромное, то svg будет весить в 50 раз больше. Если загрузить большое фото, браузер может не загрузить .svg. Советуется для маленьких пиксельных картинок.',
+'download':'Скачать SVG',
+'instructionTitle':'Инструкция по работе с SVG Конвертером',
+'instruction1':'Нажмите на поле выбора файла чтобы загрузить изображение.',
+'instruction2':'После загрузки изображение появится в области предпросмотра.',
+'instruction3':'Нажмите кнопку «Скачать SVG» чтобы скачать преобразованное изображение.',
+'instruction4':'Для лучших результатов используйте небольшие изображения с низким разрешением.',
+'instruction5':'Изображения с прозрачным фоном лучше конвертируются в SVG.'
+},
+'en':{
+'title':'SVG Converter',
+'subtitle':'Upload your photo and get its SVG version!',
+'warning':'[ ! ] Warning! If the photo is huge, the SVG will weigh 50 times more. If you upload a large photo, the browser may not load the .svg. Recommended for small pixel images.',
+'download':'Download SVG',
+'instructionTitle':'SVG Converter Instructions',
+'instruction1':'Click on the file selection field to upload an image.',
+'instruction2':'After uploading, the image will appear in the preview area.',
+'instruction3':'Click the "Download SVG" button to download the converted image.',
+'instruction4':'For best results, use small images with low resolution.',
+'instruction5':'Images with transparent background convert better to SVG.'
+}
+};
+let currentLang='en';
+function setLanguage(lang){
+currentLang=lang;
+localStorage.setItem('svgConverterLang',lang);
+document.getElementById('langRu').classList.toggle('active',lang==='ru');
+document.getElementById('langEn').classList.toggle('active',lang==='en');
+document.querySelectorAll('[data-i18n]').forEach(element=>{
+const key=element.getAttribute('data-i18n');
+if(translations[lang][key]){
+element.innerHTML=translations[lang][key];
+}
+});
+}
+document.addEventListener('DOMContentLoaded',()=>{
+const savedLang=localStorage.getItem('svgConverterLang')||'ru';
+setLanguage(savedLang);
+document.getElementById('langRu').addEventListener('click',()=>setLanguage('ru'));
+document.getElementById('langEn').addEventListener('click',()=>setLanguage('en'));
+document.getElementById('instructionsBtn').addEventListener('click',()=>{
+document.getElementById('instructionsOverlay').classList.add('active');
+});
+document.getElementById('instructionsClose').addEventListener('click',()=>{
+document.getElementById('instructionsOverlay').classList.remove('active');
+});
+document.getElementById('instructionsOverlay').addEventListener('click',(e)=>{
+if(e.target===document.getElementById('instructionsOverlay')){
+document.getElementById('instructionsOverlay').classList.remove('active');
+}
+});
+});
+const fileInput=document.getElementById('fileInput');
+const preview=document.getElementById('preview');
+const downloadBtn=document.getElementById('downloadBtn');
+const pad=(number)=>(number<10?'0':'')+number;
+fileInput.addEventListener('change',()=>{
+const file=fileInput.files[0];
+if(!file)return;
+const reader=new FileReader();
+reader.onload=e=>{
+const img=new Image();
+img.onload=()=>{
+const width=img.width;
+const height=img.height;
+const canvas=document.createElement('canvas');
+canvas.width=width;
+canvas.height=height;
+const ctx=canvas.getContext('2d');
+ctx.drawImage(img,0,0);
+const imageData=ctx.getImageData(0,0,width,height).data;
+let svgRects='';
+for(let y=0;y<height;y++){
+for(let x=0;x<width;x++){
+const idx=(y*width+x)*4;
+const r=imageData[idx];
+const g=imageData[idx+1];
+const b=imageData[idx+2];
+const a=imageData[idx+3]/255;
+if(a>0){
+svgRects+=`<rect x="${x}" y="${y}" width="1" height="1" fill="rgba(${r},${g},${b},${a})"/>`;
+}
+}
+}
+const svgContent=`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">${svgRects}</svg>`;
+const blob=new Blob([svgContent],{type:"image/svg+xml"});
+const url=URL.createObjectURL(blob);
+const now=new Date();
+const randomNumber=Math.floor(10000+Math.random()*90000);
+const filename=`${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())}.${pad(now.getHours())};${pad(now.getMinutes())}.${randomNumber}.svg`;
+downloadBtn.onclick=()=>{
+const a=document.createElement('a');
+a.href=url;
+a.download=filename;
+a.click();
+URL.revokeObjectURL(url);
+};
+downloadBtn.disabled=false;
+preview.src=e.target.result;
+};
+img.src=e.target.result;
+};
+reader.readAsDataURL(file);
+});
+</script>
 </body>
-</html> 
+</html>

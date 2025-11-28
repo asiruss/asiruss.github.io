@@ -240,204 +240,238 @@ style="accent-color: goldenrod;"
 </div>
 </div>
 <script>
-const translations={
-'ru':{
-'download':'Скачать',
-'instructionTitle':'Инструкция по работе с ФотоМашинкой',
-'instruction1':'Нажмите на область загрузки чтобы выбрать изображение.',
-'instruction2':'Используйте ползунки или поля ввода для установки нужного разрешения.',
-'instruction3':'Используйте пресеты для быстрого выбора разрешения.',
-'instruction4':'Нажмите кнопку скачать чтобы сохранить ваше изображение.',
-'instruction5':'В превью отображается как будет выглядеть ваше изображение при выбранном разрешении.'
-},
-'en':{
-'download':'Download',
-'instructionTitle':'Photo Machine Instructions',
-'instruction1':'Click on the upload area to select an image.',
-'instruction2':'Use the sliders or input fields to set the desired resolution.',
-'instruction3':'Use presets for quick resolution selection.',
-'instruction4':'Click the download button to save your image.',
-'instruction5':'The preview shows how your image will look at the selected resolution.'
-}
+const translations = {
+    'ru': {
+        'download': 'Скачать',
+        'instructionTitle': 'Инструкция по работе с ФотоМашинкой',
+        'instruction1': 'Нажмите на область загрузки чтобы выбрать изображение.',
+        'instruction2': 'Используйте ползунки или поля ввода для установки нужного разрешения.',
+        'instruction3': 'Используйте пресеты для быстрого выбора разрешения.',
+        'instruction4': 'Нажмите кнопку скачать чтобы сохранить ваше изображение.',
+        'instruction5': 'В превью отображается как будет выглядеть ваше изображение при выбранном разрешении.'
+    },
+    'en': {
+        'download': 'Download',
+        'instructionTitle': 'Photo Machine Instructions',
+        'instruction1': 'Click on the upload area to select an image.',
+        'instruction2': 'Use the sliders or input fields to set the desired resolution.',
+        'instruction3': 'Use presets for quick resolution selection.',
+        'instruction4': 'Click the download button to save your image.',
+        'instruction5': 'The preview shows how your image will look at the selected resolution.'
+    }
 };
-let currentLang='en';
-function setLanguage(lang){
-currentLang=lang;
-localStorage.setItem('photoMachineLang',lang);
-document.getElementById('langRu').classList.toggle('active',lang==='ru');
-document.getElementById('langEn').classList.toggle('active',lang==='en');
-document.querySelectorAll('[data-i18n]').forEach(element=>{
-const key=element.getAttribute('data-i18n');
-if(translations[lang][key]){
-element.innerHTML=translations[lang][key];
+
+let currentLang = 'en';
+
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('photoMachineLang', lang);
+
+    document.getElementById('langRu').classList.toggle('active', lang === 'ru');
+    document.getElementById('langEn').classList.toggle('active', lang === 'en');
+
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+            element.innerHTML = translations[lang][key];
+        }
+    });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('photoMachineLang') || 'en';
+    setLanguage(savedLang);
+
+    document.getElementById('langRu').addEventListener('click', () => setLanguage('ru'));
+    document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
+
+    document.getElementById('instructionsBtn').addEventListener('click', () => {
+        document.getElementById('instructionsOverlay').classList.add('active');
+    });
+
+    document.getElementById('instructionsClose').addEventListener('click', () => {
+        document.getElementById('instructionsOverlay').classList.remove('active');
+    });
+
+    document.getElementById('instructionsOverlay').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('instructionsOverlay')) {
+            document.getElementById('instructionsOverlay').classList.remove('active');
+        }
+    });
 });
+
+const uploadInput = document.getElementById("uploadInput");
+const previewCanvas = document.getElementById("previewCanvas");
+const previewCtx = previewCanvas.getContext("2d");
+const realCanvas = document.getElementById("realCanvas");
+const realCtx = realCanvas.getContext("2d");
+const plusText = document.getElementById("plusText");
+
+const widthSlider = document.getElementById("widthSlider");
+const heightSlider = document.getElementById("heightSlider");
+const widthValInput = document.getElementById("widthVal");
+const heightValInput = document.getElementById("heightVal");
+const presets = document.querySelectorAll(".preset");
+
+let image = null;
+
+function updateSizeDisplay() {
+    widthValInput.value = widthSlider.value;
+    heightValInput.value = heightSlider.value;
 }
-document.addEventListener('DOMContentLoaded',()=>{
-const savedLang=localStorage.getItem('photoMachineLang')||'en';
-setLanguage(savedLang);
-document.getElementById('langRu').addEventListener('click',()=>setLanguage('ru'));
-document.getElementById('langEn').addEventListener('click',()=>setLanguage('en'));
-document.getElementById('instructionsBtn').addEventListener('click',()=>{
-document.getElementById('instructionsOverlay').classList.add('active');
+
+function updatePreviewCanvasSize() {
+    const w = parseInt(widthSlider.value);
+    const h = parseInt(heightSlider.value);
+    const maxSize = 256;
+    const minSideSize = 40;
+
+    let scale;
+
+    if (w > h) {
+        scale = maxSize / w;
+        let scaledH = h * scale;
+        if (scaledH < minSideSize) {
+            scale = minSideSize / h;
+        }
+    } else {
+        scale = maxSize / h;
+        let scaledW = w * scale;
+        if (scaledW < minSideSize) {
+            scale = minSideSize / w;
+        }
+    }
+
+    const displayW = Math.round(w * scale);
+    const displayH = Math.round(h * scale);
+
+    previewCanvas.width = w;
+    previewCanvas.height = h;
+    previewCanvas.style.width = displayW + "px";
+    previewCanvas.style.height = displayH + "px";
+}
+
+function drawPreview() {
+    const w = parseInt(widthSlider.value);
+    const h = parseInt(heightSlider.value);
+    if (!image || w < 1 || h < 1) return;
+
+    const tempCanvas = document.createElement("canvas");
+    const tempCtx = tempCanvas.getContext("2d");
+    tempCanvas.width = w;
+    tempCanvas.height = h;
+
+    tempCtx.imageSmoothingEnabled = false;
+
+    const ratio = Math.min(w / image.width, h / image.height, 1);
+    const drawW = image.width * ratio;
+    const drawH = image.height * ratio;
+    const dx = (w - drawW) / 2;
+    const dy = (h - drawH) / 2;
+    tempCtx.drawImage(image, dx, dy, drawW, drawH);
+
+    previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+    previewCtx.imageSmoothingEnabled = false;
+    previewCtx.drawImage(tempCanvas, 0, 0);
+}
+
+function drawFinalCanvas() {
+    const w = parseInt(widthSlider.value);
+    const h = parseInt(heightSlider.value);
+    if (!image || w < 1 || h < 1) return;
+
+    realCanvas.width = w;
+    realCanvas.height = h;
+
+    realCtx.imageSmoothingEnabled = false;
+
+    const ratio = Math.min(w / image.width, h / image.height, 1);
+    const drawW = image.width * ratio;
+    const drawH = image.height * ratio;
+    const dx = (w - drawW) / 2;
+    const dy = (h - drawH) / 2;
+    realCtx.drawImage(image, dx, dy, drawW, drawH);
+}
+
+function updateAll() {
+    updateSizeDisplay();
+    updatePreviewCanvasSize();
+    drawPreview();
+}
+
+function handleManualInput(inputElement, sliderElement) {
+    let value = parseInt(inputElement.value);
+    const min = parseInt(inputElement.min);
+    const max = parseInt(inputElement.max);
+
+    if (isNaN(value) || value < min) {
+        value = min;
+    } else if (value > max) {
+        value = max;
+    }
+
+    inputElement.value = value;
+    sliderElement.value = value;
+    updateAll();
+}
+
+widthValInput.addEventListener('blur', () => handleManualInput(widthValInput, widthSlider));
+heightValInput.addEventListener('blur', () => handleManualInput(heightValInput, heightSlider));
+
+widthValInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        widthValInput.blur();
+    }
 });
-document.getElementById('instructionsClose').addEventListener('click',()=>{
-document.getElementById('instructionsOverlay').classList.remove('active');
+
+heightValInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        heightValInput.blur();
+    }
 });
-document.getElementById('instructionsOverlay').addEventListener('click',(e)=>{
-if(e.target===document.getElementById('instructionsOverlay')){
-document.getElementById('instructionsOverlay').classList.remove('active');
-}
+
+uploadInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (evt) {
+        image = new Image();
+        image.onload = () => {
+            plusText.style.display = "none";
+            updateAll();
+        };
+        image.src = evt.target.result;
+    };
+    reader.readAsDataURL(file);
 });
+
+widthSlider.addEventListener("input", updateAll);
+heightSlider.addEventListener("input", updateAll);
+
+document.getElementById("downloadBtn").addEventListener("click", () => {
+    if (!image) {
+        alert(currentLang === 'ru' ? "Сначала выберите изображение" : "Please select an image first");
+        return;
+    }
+    drawFinalCanvas();
+    const w = widthSlider.value;
+    const h = heightSlider.value;
+    const link = document.createElement("a");
+    link.download = `image_${w}x${h}.png`;
+    link.href = realCanvas.toDataURL();
+    link.click();
 });
-const uploadInput=document.getElementById("uploadInput");
-const previewCanvas=document.getElementById("previewCanvas");
-const previewCtx=previewCanvas.getContext("2d");
-const realCanvas=document.getElementById("realCanvas");
-const realCtx=realCanvas.getContext("2d");
-const plusText=document.getElementById("plusText");
-const widthSlider=document.getElementById("widthSlider");
-const heightSlider=document.getElementById("heightSlider");
-const widthValInput=document.getElementById("widthVal");
-const heightValInput=document.getElementById("heightVal");
-const presets=document.querySelectorAll(".preset");
-let image=null;
-function updateSizeDisplay(){
-widthValInput.value=widthSlider.value;
-heightValInput.value=heightSlider.value;
-}
-function updatePreviewCanvasSize(){
-const w=parseInt(widthSlider.value);
-const h=parseInt(heightSlider.value);
-const maxSize=256;
-const minSideSize=40;
-let scale;
-if(w>h){
-scale=maxSize/w;
-let scaledH=h*scale;
-if(scaledH<minSideSize){
-scale=minSideSize/h;
-}
-}else{
-scale=maxSize/h;
-let scaledW=w*scale;
-if(scaledW<minSideSize){
-scale=minSideSize/w;
-}
-}
-const displayW=Math.round(w*scale);
-const displayH=Math.round(h*scale);
-previewCanvas.width=w;
-previewCanvas.height=h;
-previewCanvas.style.width=displayW+"px";
-previewCanvas.style.height=displayH+"px";
-}
-function drawPreview(){
-const w=parseInt(widthSlider.value);
-const h=parseInt(heightSlider.value);
-if(!image||w<1||h<1)return;
-const tempCanvas=document.createElement("canvas");
-const tempCtx=tempCanvas.getContext("2d");
-tempCanvas.width=w;
-tempCanvas.height=h;
-tempCtx.fillStyle="white";
-tempCtx.fillRect(0,0,w,h);
-tempCtx.imageSmoothingEnabled=false;
-const ratio=Math.min(w/image.width,h/image.height,1);
-const drawW=image.width*ratio;
-const drawH=image.height*ratio;
-const dx=(w-drawW)/2;
-const dy=(h-drawH)/2;
-tempCtx.drawImage(image,dx,dy,drawW,drawH);
-previewCtx.clearRect(0,0,previewCanvas.width,previewCanvas.height);
-previewCtx.fillStyle="white";
-previewCtx.fillRect(0,0,previewCanvas.width,previewCanvas.height);
-previewCtx.imageSmoothingEnabled=false;
-previewCtx.drawImage(tempCanvas,0,0);
-}
-function drawFinalCanvas(){
-const w=parseInt(widthSlider.value);
-const h=parseInt(heightSlider.value);
-if(!image||w<1||h<1)return;
-realCanvas.width=w;
-realCanvas.height=h;
-realCtx.fillStyle="white";
-realCtx.fillRect(0,0,w,h);
-realCtx.imageSmoothingEnabled=false;
-const ratio=Math.min(w/image.width,h/image.height,1);
-const drawW=image.width*ratio;
-const drawH=image.height*ratio;
-const dx=(w-drawW)/2;
-const dy=(h-drawH)/2;
-realCtx.drawImage(image,dx,dy,drawW,drawH);
-}
-function updateAll(){
-updateSizeDisplay();
-updatePreviewCanvasSize();
-drawPreview();
-}
-function handleManualInput(inputElement,sliderElement){
-let value=parseInt(inputElement.value);
-const min=parseInt(inputElement.min);
-const max=parseInt(inputElement.max);
-if(isNaN(value)||value<min){
-value=min;
-}else if(value>max){
-value=max;
-}
-inputElement.value=value;
-sliderElement.value=value;
-updateAll();
-}
-widthValInput.addEventListener('blur',()=>handleManualInput(widthValInput,widthSlider));
-heightValInput.addEventListener('blur',()=>handleManualInput(heightValInput,heightSlider));
-widthValInput.addEventListener('keydown',(e)=>{
-if(e.key==='Enter'){
-widthValInput.blur();
-}
+
+presets.forEach((btn) => {
+    btn.addEventListener("click", () => {
+        const [w, h] = btn.textContent.split("×").map(Number);
+        widthSlider.value = w;
+        heightSlider.value = h;
+        updateAll();
+    });
 });
-heightValInput.addEventListener('keydown',(e)=>{
-if(e.key==='Enter'){
-heightValInput.blur();
-}
-});
-uploadInput.addEventListener("change",(e)=>{
-const file=e.target.files[0];
-if(!file)return;
-const reader=new FileReader();
-reader.onload=function(evt){
-image=new Image();
-image.onload=()=>{
-plusText.style.display="none";
-updateAll();
-};
-image.src=evt.target.result;
-};
-reader.readAsDataURL(file);
-});
-widthSlider.addEventListener("input",updateAll);
-heightSlider.addEventListener("input",updateAll);
-document.getElementById("downloadBtn").addEventListener("click",()=>{
-if(!image){
-alert(currentLang==='ru'?"Сначала выберите изображение":"Please select an image first");
-return;
-}
-drawFinalCanvas();
-const w=widthSlider.value;
-const h=heightSlider.value;
-const link=document.createElement("a");
-link.download=`image_${w}x${h}.png`;
-link.href=realCanvas.toDataURL();
-link.click();
-});
-presets.forEach((btn)=>{
-btn.addEventListener("click",()=>{
-const[w,h]=btn.textContent.split("×").map(Number);
-widthSlider.value=w;
-heightSlider.value=h;
-updateAll();
-});
-});
+
 updateAll();
 </script>
 </body>
